@@ -3,125 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <title>idettman.github.io</title>
-  <style type="text/css">
-    h1 {
-      color: #CECECE;
-      font-size: 5rem;
-      margin: 0;
-    }
-    h3 {
-      color: orangered;
-      font-size: 2rem;
-      margin: 0;
-    }
-    
-    .tools {
-      width: 480px;
-      display: inline-block;
-    }
-    .content {
-      width: 300px;
-      display: inline-block;
-      vertical-align: top;
-      font-size: 20px;
-      white-space: pre;
-      font-family: serif;
-    }
-    
-    .patterns {
-      background-color: orangered;
-    }
-    .fav {
-      background-color: #3F51B5;
-    }
-    .build {
-      background-color: green;
-    }
-    .libs {
-      background-color: midnightblue;
-    }
-    ul {
-      display: block;
-      border-radius: 4px;
-      border: 0 none;
-      list-style-type: none;
-      margin: 0 0 8px 0;
-      padding: 0;
-    }
-    ul li {
-      
-    }
-    a {
-      color: #fffefe;
-      display: block;
-      text-decoration: none;
-      padding: 10px 19px;
-      font-family: monospace;
-      /* text-overflow: clip; */
-      text-rendering: optimizeSpeed;
-      text-shadow: rgba(0,0,0,0.45) -6px 4px 8px;
-      /* text-transform: none; */
-      font-size: 16px;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
 <main>
   <header>
-    <h1>idettman.github.io</h1>
+    <h1>Index</h1>
   </header>
 
-  <div class="tools">
-    <ul class="build">
+  <div class="tools white">
+    <ul class="site navcontainer">
       <li>
         <a href="functional.html">Functional JS</a>
         <a href="physics.html">Physics</a>
+        <a href="python-utils.html">Python Utils</a>
+        <a href="stack-edit.html">Stack Edit</a>
       </li>
     </ul>
-    
-    <ul class="fav">
+    <ul class="fav navcontainer">
       <li>
         <a href="https://mermaidjs.github.io/mermaid-live-editor/">Mermaid Live Editor</a>
         <a href="https://mermaidjs.github.io/">mermaidjs.github.io</a>
         <a href="http://mdp.tylingsoft.com/"
            title="Markdown Plus ('M+' or 'mdp' for short) is a markdown editor with extra features."
         >Markdown Plus: Online Editor</a>
-        <a href="https://github.com/tylingsoft/markdown-plus">markdown-plus github</a>
-        <a href="https://stackedit.io/app#">https://stackedit.io/app#</a>
+      </li>
+    </ul>
 
+    <ul class="patterns navcontainer">
+      <li>
+        <a href="http://blog.cleancoder.com/uncle-bob/2017/07/11/PragmaticFunctionalProgramming.html">Pragmatic
+          Functional Programming</a>
+        <a href="https://sinon.org/algorithms/">Algorithmic cheatsheet</a>
+      </li>
+    </ul>
+
+    <ul class="libs navcontainer">
+      <li>
+        <a href="https://github.com/bahmutov/code-snippets">bahmutov/code-snippets</a>
+        <a href="https://github.com/tylingsoft/markdown-plus">markdown-plus github</a>
         <a href="https://github.com/gnab/js-workshop">In-browser Javascript editor and evaluator</a>
       </li>
     </ul>
 
-    <ul class="patterns">
-      <li>
-        <a href="http://blog.cleancoder.com/uncle-bob/2017/07/11/PragmaticFunctionalProgramming.html">Pragmatic Functional Programming</a>
-        <a href="https://sinon.org/algorithms/">Algorithmic cheatsheet</a>
-      </li>
-    </ul>
-    
-    <ul class="libs">
-      <li>
-        <a href="http://blog.cleancoder.com/uncle-bob/2017/07/11/PragmaticFunctionalProgramming.html">Pragmatic Functional Programming</a>
-      </li>
-    </ul>
-
   </div>
-  <div class="content"><h3>Examples: IntelliJ Find and Replace</h3>
+  <div class="content"><h2>IntelliJ find and replace</h2>
 
     Reformat the following time value "[2:15 PM]" by removing the brackets
-    Find \[(.*)\]
-    Replace $1
+
+    Find <code>\[(.*)\]</code>
+    Replace <code>$1</code>
 
     Add two spaces to the end of every line (to create line-break in markdown)
-    Find [\r\n]
-    Replace \n
+
+    Find <code>[\r\n]</code>
+    Replace <code>\n</code>
 
     Add backticks around values surrounded by parenthesis
-    Find \((.*)\)
-    Replace `\($1\)`
+    Find <code>\((.*)\)</code>
+    Replace <code>`\($1\)`</code>
+
+    <h2>Bash find process by port and kill</h2>
+
+    Find processes using port <code>9999</code>
+    <code>lsof -i :9999</code>
+
+    Kill using the PID from <code>lsof</code>
+    <code>kill -9 &lt;PID&gt;</code>
+
+    <h2>Bash query app information using the Launch Services</h2>
+
+    You can query app information using the Launch Services database to dump a list of all registered apps, then grep
+    for the one you want (in this case Google Chrome), for example:
+    
+    <code>/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister
+      -dump | grep -i "google chrome"</code>
+
+    Gives me the output:
+    <code>
+      path: /Applications/Google Chrome.app/
+      executable: Contents/MacOS/Google Chrome
+      path: /Applications/Google Chrome.app/Contents/Versions/27.0.1453.116/Google Chrome Helper.app/
+      executable: Contents/MacOS/Google Chrome Helper
+    </code>
   </div>
+
 </main>
 </body>
 </html>
