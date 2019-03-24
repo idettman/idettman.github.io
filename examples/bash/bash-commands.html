@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Bash Commands</title>
+	<link href="../css/developer-tag-styles.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<section>
+	
+	<article>
+		<h3>wget</h3>
+		<code>brew install wget</code>
+		<code>wget http://google.com</code>
+	</article>
+	
+	<article>
+		<h3>flush osx DNS cache</h3>
+		<code>sudo killall -HUP mDNSResponder</code>
+		<a href="http://www.howtoisolve.com/how-to-flush-dns-cache-in-mac-os-x-ei-capitan-10-11-10-10-4/">source page</a>
+	</article>
+	
+	<article>
+		<h3>curl</h3>
+		<code>curl --proxy http://proxy.inbcu.com:80 http://matrix.comcastnets.net:8081/nexus/content/groups/public/spy/spymemcached/2.6/</code>
+		<code>curl -O http://appldnld.apple.com/iTunes11/091-6058.20130605.Cw321/iTunes11.0.4.dmg</code>
+	</article>
+	
+	<article>
+		<h3>nslookup</h3>
+		<code>nslookup matrix.comcastnets.net</code>
+	</article>
+	
+	<article>
+		<h3>touch</h3>
+		<code>touch filename.ext</code>
+	</article>
+	
+	<article>
+		<h3>show command history</h3>
+		<code>history</code>
+	</article>
+	
+	<article>
+		<h3>show current processes</h3>
+		<code>top</code>
+	</article>
+	
+	<article>
+		<h3>show external IP address</h3>
+		<code>curl ipecho.net/plain; echo</code>
+	</article>
+	
+	<article>
+		<h3>show network IP address</h3>
+		<code>ipconfig getifaddr en0</code>
+	</article>
+	
+	<article>
+		<h3>run the last command again</h3>
+		<code>!!</code>
+		<h4>if you forgot sudo on last command</h4>
+		<code>sudo !!</code>
+	</article>
+	
+	<article>
+		<h3>start a simple server in any folder</h3>
+		<code>python -m SimpleHTTPServer 8000</code>
+	</article>
+	
+	<article>
+		<h3>view file system usage</h3>
+		<code>sudo fs_usage</code>
+	</article>
+	
+	<article>
+		<h3>copy large folder/file data</h3>
+		<code>ditto -V /old/work/ /new/work/</code>
+	</article>
+
+</section>
+
+<section>
+	<h2>User/Group</h2>
+	
+	<div class="command">
+		chown
+		<ul>
+			<li>sudo chown -R username:group directory
+				(change ownership for both user and group recursively)
+			</li>
+			<li>
+				<a href="https://help.ubuntu.com/community/FilePermissions">chown reference</a>
+			</li>
+		</ul>
+		usermod
+		<ul>
+			<li>sudo usermod -a -G groupName userName
+				(add a user to a group)
+			</li>
+			<li>
+				<a href="http://askubuntu.com/questions/79565/add-user-to-existing-group">usermod post</a>
+			</li>
+		</ul>
+		su
+		<ul>
+			<li>
+				<a href="http://manpages.ubuntu.com/manpages/trusty/man1/su.1.html">su reference</a>
+			</li>
+		</ul>
+	</div>
+</section>
+
+<section>
+	<h2>Directory</h2>
+	
+	<div class="command">
+		ls
+		<ul>
+			<li>-a
+				<span>do not ignore files starting with "."</span>
+			</li>
+			<li>-l
+				<span>long listing format</span>
+			</li>
+			<li>-lt
+				<span>show and sort by ctime (time of last modification)</span>
+			</li>
+			<li>-ltu
+				<span>show and sort by access time</span>
+			</li>
+			<li>-g
+				<span>long listing without owner displayed</span>
+			</li>
+			<li>-gG
+				<span>long listing without owner or group displayed</span>
+			</li>
+			<li>-h
+				<span>human readable file-size</span>
+			</li>
+		
+		</ul>
+	</div>
+</section>
+
+<section>
+	<h2>Symbolic Link</h2>
+	
+	<div class="command">ln [options] (target file) [link name]</div>
+	<div>ln -sv /media/fileserver/anotherfile.ods /home/user/anotherfile.ods</div>
+	<div>s option creates a symbolic link, if omitted a hard link will be created. v means "be verbose"</div>
+	<div>
+		<p>The
+			<code>s</code>
+			option creates a symbolic link, if omitted a
+			<a
+					href="http://en.wikipedia.org/wiki/Hard_link" rel="nofollow">hard link
+			</a>
+			will be created.
+			<code>v</code>
+			means "be verbose", i.e.
+			<code>ln</code>
+			will show what it's doing.
+		</p>
+		
+		<p>You could also
+			<code>cd</code>
+			to target's directory first:
+		</p>
+		
+		<pre>
+			<code>cd /media/fileserver
+				ln -sv anotherfile.ods /home/user/anotherfile.ods
+			</code>
+		</pre>
+		
+		<p>Or
+			<code>cd</code>
+			to destination directory:
+		</p>
+		
+		<pre>
+			<code>cd /home/user/
+				ln -sv /media/fileserver/anotherfile.ods
+			</code>
+		</pre>
+		
+		<p>If you omit the link name, target's name is used. The above command creates a link to
+			<code>/media/fileserver/anotherfile.ods</code>
+			in
+			<code>/home/user/anotherfile.ods</code>
+		</p>
+	</div>
+</section>
+
+</body>
+</html>
