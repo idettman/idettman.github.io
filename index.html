@@ -10,7 +10,7 @@
 
 <main>
   <header>
-    <h1>Index</h1>
+    <h1>Isaac Dettman: Software Engineer</h1>
   </header>
 
   <div class="tools white">
@@ -22,16 +22,7 @@
         <a href="stack-edit.html">Stack Edit</a>
       </li>
     </ul>
-    <ul class="fav navcontainer">
-      <li>
-        <a href="https://mermaidjs.github.io/mermaid-live-editor/">Mermaid Live Editor</a>
-        <a href="https://mermaidjs.github.io/">mermaidjs.github.io</a>
-        <a href="http://mdp.tylingsoft.com/"
-           title="Markdown Plus ('M+' or 'mdp' for short) is a markdown editor with extra features."
-        >Markdown Plus: Online Editor</a>
-      </li>
-    </ul>
-
+    
     <ul class="patterns navcontainer">
       <li>
         <a href="http://blog.cleancoder.com/uncle-bob/2017/07/11/PragmaticFunctionalProgramming.html">Pragmatic
@@ -47,40 +38,42 @@
         <a href="https://github.com/gnab/js-workshop">In-browser Javascript editor and evaluator</a>
       </li>
     </ul>
+    
+    <ul class="fav navcontainer">
+      <li>
+        <a href="https://mermaidjs.github.io/">mermaidjs.github.io</a>
+        <a href="http://mdp.tylingsoft.com/"
+           title="Markdown Plus ('M+' or 'mdp' for short) is a markdown editor with extra features."
+        >Markdown Plus: Online Editor</a>
+      </li>
+    </ul>
 
   </div>
   <div class="content"><h2>IntelliJ find and replace</h2>
-
     Reformat the following time value "[2:15 PM]" by removing the brackets
-
     Find <code>\[(.*)\]</code>
     Replace <code>$1</code>
 
     Add two spaces to the end of every line (to create line-break in markdown)
-
     Find <code>[\r\n]</code>
     Replace <code>\n</code>
 
     Add backticks around values surrounded by parenthesis
     Find <code>\((.*)\)</code>
     Replace <code>`\($1\)`</code>
-
     <h2>Bash find process by port and kill</h2>
-
     Find processes using port <code>9999</code>
     <code>lsof -i :9999</code>
 
     Kill using the PID from <code>lsof</code>
     <code>kill -9 &lt;PID&gt;</code>
-
     <h2>Bash query app information using the Launch Services</h2>
-
     You can query app information using the Launch Services database to dump a list of all registered apps, then grep
     for the one you want (in this case Google Chrome), for example:
-    
-    <code>/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister
-      -dump | grep -i "google chrome"</code>
-
+    <code>
+    /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister
+    -dump | grep -i "google chrome"
+    </code>
     Gives me the output:
     <code>
       path: /Applications/Google Chrome.app/
@@ -88,6 +81,116 @@
       path: /Applications/Google Chrome.app/Contents/Versions/27.0.1453.116/Google Chrome Helper.app/
       executable: Contents/MacOS/Google Chrome Helper
     </code>
+    <h2>Bash Type Command</h2>
+    <code>type: type [-afptP] name [name …]</code>
+    For each name indicate how it would be interpreted if used as a command name
+
+    <code>-t</code> returns one of <code>alias, keyword, function, builtin, file, ''</code> if name is an alias, shell
+    reserved word, shell function, shell builtin, disk file, or unfound
+
+    <code>-p</code> returns the name of the disk file that would be executed or nothing if <code>type -t NAME</code>
+    would not return file
+
+    <code>-P</code> forces a path search for each name, even if it is an <code>alias, builtin, function</code> returns
+    the name of the disk file that would be executed
+
+    <code>-a</code> returns all of the places that contain an executable named file
+    that includes <code>aliases, builtins, functions</code>, if the <code>-p</code> flag is not also used
+
+    <code>-f</code> suppresses shell function lookup
+    Example: get file path
+
+    command: <code>type -P node</code> result: <code>/usr/local/bin/node</code>
+    Example: get file type
+
+    command: <code>type -t node</code> result: <code>file</code>
+
+    command: <code>type -t source</code>
+    result: <code>builtin</code>
+
+    typeset: <code>typeset [-afFirtx] [-p] name[=value]</code>
+
+    <h2>Bash Various</h2>
+    wget
+    <code>brew install wget</code>
+    <code>wget http://google.com</code>
+
+    flush osx DNS cache
+    <code>sudo killall -HUP mDNSResponder</code>
+    
+    curl
+    <code>curl --proxy http://proxy.iiiii.com:80 http://matrix.cccmmmtts.net:8081/nexus/content/groups/public/spy/spymemcached/2.6/</code>
+    <code>curl -O http://appldnld.apple.com/iTunes11/091-6058.20130605.Cw321/iTunes11.0.4.dmg</code>
+
+    nslookup
+    <code>nslookup matrix.comcastnets.net</code>
+
+    touch
+    <code>touch filename.ext</code>
+
+    show command history
+    <code>history</code>
+
+    show current processes
+    <code>top</code>
+
+    show external IP address
+    <code>curl ipecho.net/plain; echo</code>
+
+    show network IP address
+    <code>ipconfig getifaddr en0</code>
+
+    run the last command again
+    <code>!!</code>
+
+    if you forgot sudo on last command
+    <code>sudo !!</code>
+
+    start a simple server in any folder
+    <code>python -m SimpleHTTPServer 8000</code>
+
+    view file system usage
+    <code>sudo fs_usage</code>
+
+    copy large folder/file data
+    <code>ditto -V /old/work/ /new/work/</code>
+    
+    <h3>User/Group</h3>
+    chown
+    <code>sudo chown -R username:group directory</code>  (change ownership for both user and group recursively) <a href="https://help.ubuntu.com/community/FilePermissions">chown reference</a>
+    usermod
+    <code>sudo usermod -a -G groupName userName</code> (add a user to a group) <a href="http://askubuntu.com/questions/79565/add-user-to-existing-group">usermod post</a>
+    su <a href="http://manpages.ubuntu.com/manpages/trusty/man1/su.1.html">su reference</a>
+    <h3>Directory</h3>
+    <code>ls -a</code> do not ignore files starting with "."
+
+    <code>-l</code> long listing format
+
+    <code>-lt</code> show and sort by ctime (time of last modification)
+
+    <code>-ltu</code> show and sort by access time
+
+    <code>-g</code> long listing without owner displayed
+    <code>-gG</code> long listing without owner or group displayed
+    <code>-h</code> human readable file-size
+    
+    <h3>Symbolic Link</h3>
+    <code>ln [options] (target file) [link name]</code>
+    
+    <code>ln -sv /media/fileserver/anotherfile.ods /home/user/anotherfile.ods</code>
+    
+    <code>s</code> option creates a symbolic link, if omitted a hard link will be created.
+    
+    <code>ln</code> will show what it's doing.
+    
+    You could also <code>cd</code> to target's directory first:
+    <code>cd /media/fileserver ln -sv anotherfile.ods /home/user/anotherfile.ods</code>
+    Or <code>cd</code> to destination directory:
+    <code>cd /home/user/ ln -sv /media/fileserver/anotherfile.ods</code>
+    
+    If you omit the link name, target's name is used. The above command creates a link to
+    <code>/media/fileserver/anotherfile.ods</code> in <code>/home/user/anotherfile.ods</code>
+    
   </div>
 
 </main>
