@@ -1,0 +1,265 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<div class="section-inner sectionLayout--insetColumn">
+	<h1 name="d5c8" id="d5c8" class="graf graf--h3 graf-after--figure graf--title">Functional Programming for JavaScript People</h1>
+	<h4 name="6ee0" id="6ee0" class="graf graf--h4 graf-after--blockquote">Pure Functions</h4>
+	<p name="bf92" id="bf92" class="graf graf--p graf-after--h4">At the heart of functional programming is the formal mathematics of describing logic:
+		<a href="https://en.wikipedia.org/wiki/Lambda_calculus" data-href="https://en.wikipedia.org/wiki/Lambda_calculus" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">lambda calculus</a>
+		. Mathematicians like to describe programs as transformations of data which leads to the first concept — 
+		<a href="https://en.wikipedia.org/wiki/Pure_function" data-href="https://en.wikipedia.org/wiki/Pure_function" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">pure functions</a>
+		. Pure functions are functions without
+		<a href="https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29" data-href="https://en.wikipedia.org/wiki/Side_effect_(computer_science)" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">side-effects</a>
+		.
+		<strong class="markup--strong markup--p-strong">Pure functions depend only on the inputs of the function, and the output should be the exact same for the same input.</strong> Here’s an example:
+	</p>
+	<pre name="1c7e" id="1c7e" class="graf graf--pre graf-after--p">
+		<strong class="markup--strong markup--pre-strong">// pure function</strong><br>const add10 = (a) =&gt; a + 10
+	</pre>
+	<pre name="dfbe" id="dfbe" class="graf graf--pre graf-after--pre">
+		<strong class="markup--strong markup--pre-strong">// impure function due to external non-constants<br></strong>let x = 10<br>const addx = (a) =&gt; a + x
+	</pre>
+	<pre name="6f5c" id="6f5c" class="graf graf--pre graf-after--pre">
+		<strong class="markup--strong markup--pre-strong">// also impure due to side-effect<br></strong>const setx = (v) =&gt; x = v
+	</pre>
+	<p name="e826" id="e826" class="graf graf--p graf-after--pre">The impure function indirectly depends on
+		<em class="markup--em markup--p-em">x</em>. If you were to change
+		<em class="markup--em markup--p-em">x</em>, then
+		<em class="markup--em markup--p-em">addx</em> would output a different value for the same inputs. This makes it hard to statically analyze and optimize programs at compile-time. But more pragmatically for JavaScript developers,
+		<strong class="markup--strong markup--p-strong">pure functions bound the congnitive load of programming</strong>. When you’re writing a pure function, you only need to concern yourself with the body of the function. You don’t need to worry about externalities that could cause problems, like anything that could change
+		<em class="markup--em markup--p-em">x</em> while when you’re writing the
+		<em class="markup--em markup--p-em">addx</em> function.</p>
+	<h4 name="56d7" id="56d7" class="graf graf--h4 graf-after--p">Function Composition</h4>
+	<p name="06e3" id="06e3" class="graf graf--p graf-after--h4">One nice thing about pure functions is that you can
+		<em class="markup--em markup--p-em">compose</em> them into new functions. One special operator used to describe programs in lambda calculus is
+		<a href="https://en.wikipedia.org/wiki/Function_composition" data-href="https://en.wikipedia.org/wiki/Function_composition" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">
+			<em class="markup--em markup--p-em">compose</em></a>
+		. Compose takes two functions and “composes” them into a new function. Check it out:
+	</p>
+	<pre name="bc96" id="bc96" class="graf graf--pre graf-after--p">const add1 = (a) =&gt; a + 1<br>const times2 = (a) =&gt; a * 2<br>const compose = (a, b) =&gt; (c) =&gt; a(b(c))<br>const add1OfTimes2 = compose(add1, times2)<br>add1OfTimes2(5) // =&gt; 11
+	</pre>
+	<p name="8ef0" id="8ef0" class="graf graf--p graf-after--pre">The
+		<em class="markup--em markup--p-em">compose</em> is analogous to the preposition “of”. Notice the order of the arguments and how they’re evaluated: add one
+		<em class="markup--em markup--p-em">of</em> times two — the second function is evaluated first. Compose is the opposite of perhaps a more intuitive function you might be familiar with from unix called
+		<em class="markup--em markup--p-em">pipe</em>, which accepts an array of functions.</p>
+	<pre name="19d8" id="19d8" class="graf graf--pre graf-after--p">const pipe = (fns) =&gt; (x) =&gt; fns.reduce((v, f) =&gt; f(v), x)<br>const times2add1 = pipe([times2, add1])<br>times2add1(5) // =&gt; 11
+	</pre>
+	<p name="0354" id="0354" class="graf graf--p graf-after--pre">With function composition, we can now build more complicated data transformations by joining together (composing) smaller functions.
+		<a href="http://fr.umio.us/why-ramda/" data-href="http://fr.umio.us/why-ramda/" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">This article</a>
+		does a great job of showing you how function composition can help you process data in a clean and concise way.
+	</p>
+	<p name="e0aa" id="e0aa" class="graf graf--p graf-after--p">Pragmatically speaking,
+		<strong class="markup--strong markup--p-strong">composition is a
+			<em class="markup--em markup--p-em">better</em> alternative to object oriented inheritance</strong>. Here’s a contrived, but real-world example for you. Suppose you need to create a greeting for your users.
+	</p>
+	<pre name="9115" id="9115" class="graf graf--pre graf-after--p">const greeting = (name) =&gt; `Hello ${name}`</pre>
+	<p name="5601" id="5601" class="graf graf--p graf-after--pre">Great! A simple, pure function. Then, your project manager says you now have some more data about your users and wants you to add prefixes to the names. So you go ahead and write this code:</p>
+	<pre name="bb48" id="bb48" class="graf graf--pre graf-after--p">const greeting = (name, male=false, female=false) =&gt;<br> `Hello ${male ? ‘Mr. ‘ : female ? ‘Ms. ‘ : ‘’} ${name}`
+	</pre>
+	<p name="e716" id="e716" class="graf graf--p graf-after--pre">This code isn’t terrible, but what if we start adding more and more booleans for other categories such as “Dr.” or “Sir”? What if we add suffixes as well such as “MD” or “PhD”? And what if we want to have a casual greeting that says “Sup” instead of “Hello”? Well now things have really gotten out of hand.</p>
+	<p name="a3d4" id="a3d4" class="graf graf--p graf-after--p">Adding booleans like this to a function isn’t exactly object oriented inheritance, but its a similar situation to when objects have properties and methods that get extended and overridden as they inherit. So as opposed to adding boolean options, lets try to use function composition:</p>
+	<pre name="e452" id="e452" class="graf graf--pre graf-after--p">const formalGreeting = (name) =&gt; `Hello ${name}`<br>const casualGreeting = (name) =&gt; `Sup ${name}`<br>const male = (name) =&gt; `Mr. ${name}`<br>const female = (name) =&gt; `Mrs. ${name}`<br>const doctor = (name) =&gt; `Dr. ${name}`<br>const phd = (name) =&gt; `${name} PhD`<br>const md = (name) =&gt; `${name} M.D.`
+	</pre>
+	<pre name="5d97" id="5d97" class="graf graf--pre graf-after--pre">formalGreeting(male(phd("Chet"))) // =&gt; "Hello Mr. Chet PhD"</pre>
+	<p name="6069" id="6069" class="graf graf--p graf-after--pre">This is much more manageable and easier to reason about. Each function does a
+		<a href="https://en.wikipedia.org/wiki/Unix_philosophy" data-href="https://en.wikipedia.org/wiki/Unix_philosophy" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">one simple thin</a>
+		g and we’re able to compose them together easily. Now, we haven’t handled all the cases here, and for that we can use our handy pipe function!
+	</p>
+	<pre name="0fbf" id="0fbf" class="graf graf--pre graf-after--p">const identity = (x) =&gt; x<br>const greet = (name, options) =&gt; {<br> return pipe([<br>
+		<strong class="markup--strong markup--pre-strong">// greeting</strong>
+		<br> options.formal ? formalGreeting :<br> casualGreeting,<br>
+		<strong class="markup--strong markup--pre-strong">// prefix</strong><br> options.doctor ? doctor :<br> options.male ? male :<br> options.female ? female :<br> identity,<br>
+		<strong class="markup--strong markup--pre-strong">// suffix</strong><br> options.phd ? phd :<br> options.md ?md :<br> identity<br> ])(name)<br>}
+	</pre>
+	<p name="a211" id="a211" class="graf graf--p graf-after--pre">Using pure functions and function composition simplifies error tracing.
+		<span class="markup--quote markup--p-quote is-other" name="anon_62345add705c" data-creator-ids="anon">When an error is thrown, the stack trace shows through every function down to the source of the exception. Often, in an OOP stack-trace, you can't view the state of the object which led to the bug.</span>
+	</p>
+	<h4 name="e17e" id="e17e" class="graf graf--h4 graf-after--p">Function Currying</h4>
+	<p name="c2af" id="c2af" class="graf graf--p graf-after--h4">Function currying was invented by the same guy who invented Haskell — his name:
+		<a href="https://en.wikipedia.org/wiki/Haskell_Curry" data-href="https://en.wikipedia.org/wiki/Haskell_Curry" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">Haskell Curry</a>
+		(correction: named after Haskell Curry). Function currying is when you call a function with fewer arguments than it wants and that function returns another function to accept the rest of the arguments.
+		<a href="https://hughfdjackson.com/javascript/why-curry-helps/" data-href="https://hughfdjackson.com/javascript/why-curry-helps/" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">This is a good article that explains</a>
+		it in more detail, but here’s a simple example using the
+		<a href="http://ramdajs.com/0.19.1/docs/#curry" data-href="http://ramdajs.com/0.19.1/docs/#curry" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">Ramda.js curry function</a>
+		.
+	</p>
+	<p name="8f4b" id="8f4b" class="graf graf--p graf-after--p">In the example below, we create a curried function “add”, which takes in two arguments. When we pass one argument, we get back a partially applied function we call “add1” which only takes one argument.</p>
+	<pre name="3f56" id="3f56" class="graf graf--pre graf-after--p">const add = R.curry((a, b) =&gt; a + b)<br>add(1, 2) // =&gt; 3<br>const add1 = add(1)<br>add1(2) // =&gt; 3<br>add1(10) // =&gt; 11
+	</pre>
+	<p name="521c" id="521c" class="graf graf--p graf-after--pre">In Haskell, all functions are automatically curried. There are no optional or default arguments.</p>
+	<p name="8803" id="8803" class="graf graf--p graf-after--p">Pragmatically, function currying is really convenient when using functions with
+		<em class="markup--em markup--p-em">map</em>, <em class="markup--em markup--p-em">compose</em> and
+		<em class="markup--em markup--p-em">pipe. </em>For example:</p>
+	<pre name="d6de" id="d6de" class="graf graf--pre graf-after--p">const users = [{name: 'chet', age:25}, {name:'joe', age:24}]<br>R.pipe(<br> R.sortBy(R.prop('age')),
+		<strong class="markup--strong markup--pre-strong">// sort user by the age property</strong><br> R.map(R.prop('name')),
+		<strong class="markup--strong markup--pre-strong">// get each name property</strong><br> R.join(', '),
+		<strong class="markup--strong markup--pre-strong">// join the names with a comma</strong><br>)(users)<br><strong class="markup--strong markup--pre-strong">// =&gt; "joe, chet"</strong>
+	</pre>
+	<p name="7d52" id="7d52" class="graf graf--p graf-after--pre">This makes data processing feel very declarative.</p>
+	<h4 name="0953" id="0953" class="graf graf--h4 graf-after--p">Monads, Functors, and Fancy&nbsp;Words</h4>
+	<p name="296c" id="296c" class="graf graf--p graf-after--h4">
+		<a href="https://en.wikipedia.org/wiki/Monad_%28functional_programming%29" data-href="https://en.wikipedia.org/wiki/Monad_(functional_programming)" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">Monads</a>
+		and
+		<a href="https://en.wikipedia.org/wiki/Functor" data-href="https://en.wikipedia.org/wiki/Functor" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">functors</a>
+		<a href="http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html" data-href="http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">read this article</a>
+	</p>
+	<p name="79ec" id="79ec" class="graf graf--p graf-after--p">Monads are pretty interesting though. Monads can be thought of as a container for a value, and to open up the container and do something to the value, you need to
+		<em class="markup--em markup--p-em">map</em> over it. Here’s a simple example:</p>
+	<pre name="48e9" id="48e9" class="graf graf--pre graf-after--p">
+		<strong class="markup--strong markup--pre-strong">// monad</strong><br>list = [-1,0,1]<br>list.map(inc) // =&gt; [0,1,2]<br>list.map(isZero) // =&gt; [false, true, false]
+	</pre>
+	<p name="bb13" id="bb13" class="graf graf--p graf-after--pre">The important thing about monads and functors is that mathematicians have been researching these ideas in
+		<a href="https://en.wikipedia.org/wiki/Category_theory" data-href="https://en.wikipedia.org/wiki/Category_theory" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">category theory</a>
+		. This provides us not only a framework for understanding programs, but
+		<a href="https://en.wikipedia.org/wiki/Monad_%28category_theory%29#Algebras_for_a_monad" data-href="https://en.wikipedia.org/wiki/Monad_%28category_theory%29#Algebras_for_a_monad" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">algebraic theorems and proofs</a>
+		we can use to statically analyze and optimize our code when it’s compiled. This is one of the main benefits of Haskell — the
+		<a href="https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler" data-href="https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">Glasgow Haskell Compiler</a>
+		is a feat of human ingenuity.
+	</p>
+	<p name="cdda" id="cdda" class="graf graf--p graf-after--p">There are all kinds of theorems and identities expressed in category theory. For example, here’s a simple identity:</p>
+	<pre name="e247" id="e247" class="graf graf--pre graf-after--p">list.map(inc).map(isZero) // =&gt; [true, false, false]<br>list.map(compose(isZero, inc)) // =&gt; [true, false, false]
+	</pre>
+	<p name="11ff" id="11ff" class="graf graf--p graf-after--pre">When
+		<em class="markup--em markup--p-em">map</em> is compiled, it uses an efficient while loop. In general this is a
+		<a href="https://en.wikipedia.org/wiki/Computational_complexity_theory" data-href="https://en.wikipedia.org/wiki/Computational_complexity_theory" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">O(n) operation (linear time)</a>
+		, but there is still overhead associated with incrementing the pointer to the next item in the list. So the second version is actually twice as performant. These are the kind of transformations that Haskell does to your code at compile-time to make it blazingly fast — and there’s a really cool trick to doing this that I’ll explain later.
+	</p>
+	<p name="895f" id="895f" class="graf graf--p graf-after--p">To expand on monads just a little, there’s a very interesting monad called the
+		<em class="markup--em markup--p-em">Maybe</em> monad (sometimes called
+		<em class="markup--em markup--p-em">Option</em> or
+		<em class="markup--em markup--p-em">Optional</em> in Swift). In Haskell, theres no such thing as
+		<em class="markup--em markup--p-em">null</em> or
+		<em class="markup--em markup--p-em">undefined</em>. To express something as being potentially
+		<em class="markup--em markup--p-em">null</em>, you need to wrap it in a monad so the Haskell compiler knows what to do with it.
+	</p>
+	<p name="8750" id="8750" class="graf graf--p graf-after--p">The
+		<em class="markup--em markup--p-em">Maybe</em> monad is a
+		<a href="https://en.wikipedia.org/wiki/Union_type" data-href="https://en.wikipedia.org/wiki/Union_type" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">union type</a>
+		that’s either <em class="markup--em markup--p-em">Nothing</em> or
+		<em class="markup--em markup--p-em">Just something</em>. In Haskell you’d define a
+		<em class="markup--em markup--p-em">Maybe </em>like this:
+	</p>
+	<pre name="573b" id="573b" class="graf graf--pre graf-after--p">type Maybe = Nothing | Just x</pre>
+	<p name="220e" id="220e" class="graf graf--p graf-after--pre">The lowercase
+		<em class="markup--em markup--p-em">x</em> just means any other type.</p>
+	<p name="89a6" id="89a6" class="graf graf--p graf-after--p">Being a monad, you can&nbsp;.<em class="markup--em markup--p-em">map()</em> over a
+		<em class="markup--em markup--p-em">Maybe</em> to change the value it contains! When you map over a
+		<em class="markup--em markup--p-em">Maybe</em>, if it of type
+		<em class="markup--em markup--p-em">Just</em>, then we apply the function to the value and returns a new
+		<em class="markup--em markup--p-em">Just</em> with that new value. If a the
+		<em class="markup--em markup--p-em">Maybe</em> is of type
+		<em class="markup--em markup--p-em">Nothing</em>, then we return
+		<em class="markup--em markup--p-em">Nothing</em>. In Haskell, the syntax is quite elegant and uses pattern matching, but in JavaScript you might use a
+		<em class="markup--em markup--p-em">Maybe </em>like this:</p>
+	<pre name="319b" id="319b" class="graf graf--pre graf-after--p">const x = Maybe.Just(10)<br>const n = x.map(inc)<br>n.isJust() // true<br>n.value() // 11
+	</pre>
+	<pre name="548f" id="548f" class="graf graf--pre graf-after--pre">const x= Maybe.Nothing<br>const n = x.map(inc) // no error!<br>n.isNothing // true
+	</pre>
+	<p name="afec" id="afec" class="graf graf--p graf-after--pre">This monad may not seem terribly useful in your Javascript code, but its interesting to see why it’s so useful in Haskell.
+		<strong class="markup--strong markup--p-strong">Haskell requires you to define what to do in every edge-case of your program, otherwise it won’t compile.</strong> When you make an HTTP request, you get back a
+		<em class="markup--em markup--p-em">Maybe</em> type because the request may fail and return nothing. And if you didn’t handle the case in which the request failed, then your program won’t compile. This basically means that it’s impossible to get runtime errors. Maybe your code does the wrong thing, but it doesn’t just magically break like things tend to do in Javascript.
+	</p>
+	<blockquote name="214b" id="214b" class="graf graf--blockquote graf-after--p">This is a big selling point for using Elm. The type system and compiler enforces that your program will run without runtime errors.</blockquote>
+	<p name="0d30" id="0d30" class="graf graf--p graf-after--blockquote">Thinking about code in the context of monads and algebraic structures will help you define and understand your problem in a structured way. For example, an interesting extention of
+		<em class="markup--em markup--p-em">Maybe</em> is the
+		<a href="http://fsharpforfunandprofit.com/rop/" data-href="http://fsharpforfunandprofit.com/rop/" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">Railway-Oriented Programming</a>
+		concept for error handling. And
+		<a href="https://www.youtube.com/watch?v=XE692Clb5LU" data-href="https://www.youtube.com/watch?v=XE692Clb5LU" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">observable streams</a>
+		are monads as well for dealing with asynchronous events.
+	</p>
+	<p name="2037" id="2037" class="graf graf--p graf-after--p">There are all kinds of fancy monads and many other words that I don’t myself fully understand. But to keep all the lingo consistent, there are specifications like
+		<a href="https://github.com/fantasyland/fantasy-land" data-href="https://github.com/fantasyland/fantasy-land" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">fantasy-land</a>
+		and the
+		<a href="https://wiki.haskell.org/Typeclassopedia" data-href="https://wiki.haskell.org/Typeclassopedia" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">typeclassopedia</a>
+		which try to unify different concepts in category theory for the purpose of writing idiomatic functional code.
+	</p>
+	<h4 name="975a" id="975a" class="graf graf--h4 graf-after--p">Referential Transparency and Immutability</h4>
+	<p name="1f10" id="1f10" class="graf graf--p graf-after--h4">Another implication of leveraging all this category theory and lambda calculus stuff is
+		<a href="https://en.wikipedia.org/wiki/Referential_transparency" data-href="https://en.wikipedia.org/wiki/Referential_transparency" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">referential transparency</a>
+		. Its really hard for mathematicians to analyze logical programs when
+		<em class="markup--em markup--p-em">two things that are the same aren’t equal to each other.</em> This is an issue all over the place in Javascript.
+	</p>
+	<pre name="09e1" id="09e1" class="graf graf--pre graf-after--p">{} == {} // false<br>[] == [] // false<br>[1,2] == [1,2] // false
+	</pre>
+	<p name="a048" id="a048" class="graf graf--p graf-after--pre">Now imagine having to do math in a world without referential transparency. You wouldn’t be able to write proofs that say that an empty array is the same things as an empty array. What should matter is only the
+		<em class="markup--em markup--p-em">value</em> of the array, not the reference pointer to the array. And so functional programming languages resort to using deep-equals to compare values. But this isn’t terribly performant, so there are some neat tricks to make this comparison quicker that leverages references.
+	</p>
+	<p name="6636" id="6636" class="graf graf--p graf-after--p">Before moving on, I just want to make one thing clear: in functional programming, you cannot mutate a variable without changing its reference. Otherwise, the function performing the mutation would be impure! Thus, you can assure that if two variables are referentially equal, their values must be equal as well. And since we can’t mutate variables in-place, then we have to copy those values into a new memory location every time we want to transform it. This is a huge performance loss and results in
+		<a href="https://en.wikipedia.org/wiki/Thrashing_%28computer_science%29" data-href="https://en.wikipedia.org/wiki/Thrashing_(computer_science)" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">garbage thrashing</a>
+		. But the solution is using
+		<a href="https://en.wikipedia.org/wiki/Persistent_data_structure" data-href="https://en.wikipedia.org/wiki/Persistent_data_structure" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">structural sharing (persistent data structures)</a>
+		.
+	</p>
+	<p name="165d" id="165d" class="graf graf--p graf-after--p">A simple example of structural sharing is a
+		<a href="https://en.wikipedia.org/wiki/Linked_list" data-href="https://en.wikipedia.org/wiki/Linked_list" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">linked list</a>
+		. Suppose you only keep a reference to the end of the list. When comparing two lists, you can first start by seeing if the ends are referentially equal. This is a nice shortcut because if they are equal, then you’re done — the two lists are the same! Otherwise, you’ll have to start iterating through the items in each list to see if their values are equal. To efficiently add a value to this list, rather than copying entire the list into a new set of memory, you can simply add a link to a new node and keep track of the reference at the new tip. Thus, we’ve structurally shared the previous data structure in a new data structure with a new reference and we’ve persisted the previous data structure as well.
+	</p>
+	<p name="57e1" id="57e1" class="graf graf--p graf-after--p">The generalized data structure for doing these immutable data transformations is called a
+		<a href="https://en.wikipedia.org/wiki/Hash_array_mapped_trie" data-href="https://en.wikipedia.org/wiki/Hash_array_mapped_trie" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">hash array mapped trie</a>
+		(HAMT). This is exactly what
+		<a href="https://facebook.github.io/immutable-js/" data-href="https://facebook.github.io/immutable-js/" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">Immutable.js</a>
+		and
+		<a href="https://github.com/swannodette/mori" data-href="https://github.com/swannodette/mori" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">Mori.js</a>
+		do. Both Clojurescript and Haskell have this built into the compiler, although I’m not sure it’s implemented in Elm yet.
+	</p>
+	<p name="6850" id="6850" class="graf graf--p graf-after--p">Using immutable data structures can give you performance gains, and help keep your sanity.
+		<a href="http://facebook.github.io/react/" data-href="http://facebook.github.io/react/" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">React</a>
+		assumes <em class="markup--em markup--p-em">props</em> and
+		<em class="markup--em markup--p-em">state</em> are always immutable so it can do an efficient check to see if the previous
+		<em class="markup--em markup--p-em">props</em> and
+		<em class="markup--em markup--p-em">state</em> are referentially equal to the next
+		<em class="markup--em markup--p-em">props</em> and
+		<em class="markup--em markup--p-em">state</em> before unnecessarily re-rendering. And in other circumstance, using immutable data simply helps to ensure that values aren’t changing without you realizing it.
+	</p>
+	<h4 name="1f5d" id="1f5d" class="graf graf--h4 graf-after--p">Lazy Evaluation</h4>
+	<p name="afa0" id="afa0" class="graf graf--p graf-after--h4">
+		<a href="https://en.wikipedia.org/wiki/Lazy_evaluation" data-href="https://en.wikipedia.org/wiki/Lazy_evaluation" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">Lazy evaluation</a>
+		is sort of a general term that covers more specific concepts like
+		<a href="https://en.wikipedia.org/wiki/Thunk" data-href="https://en.wikipedia.org/wiki/Thunk" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">thunks</a>
+		and
+		<a href="https://en.wikipedia.org/wiki/Generator_%28computer_programming%29" data-href="https://en.wikipedia.org/wiki/Generator_(computer_programming)" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">generators</a>
+		. Lazy evaluation means exactly what you think it does: don’t do something until you absolutely have to, be lazy and procrastinate as long as possible. One analogy is to suppose you have a large, possibly infinite, amount of dishes to wash. Rather than put all the dishes in the sink and wash them at once, let’s be lazy and just take one dish at a time.
+	</p>
+	<p name="e011" id="e011" class="graf graf--p graf-after--p">In Haskell, the true essence lazy evaluation is a little easier to understand, so I’m going to start there. First, we need to understand
+		<a href="https://en.wikipedia.org/wiki/Evaluation_strategy" data-href="https://en.wikipedia.org/wiki/Evaluation_strategy" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">how programs evaluate</a>
+		. Pretty much every language you’re used to uses
+		<em class="markup--em markup--p-em">innermost reduction</em>. Innermost reduction looks like this:
+	</p>
+	<pre name="9fce" id="9fce" class="graf graf--pre graf-after--p">square(3 + 4)<br>square(7) // evaluated the innermost expression<br>7 * 7<br>49
+	</pre>
+	<p name="25f8" id="25f8" class="graf graf--p graf-after--pre">This is a sane and reasonable way of evaluating programs. But now, let’s consider outermost reduction:</p>
+	<pre name="c451" id="c451" class="graf graf--pre graf-after--p">square(3 + 4)<br>(3 + 4) * (3 + 4) // evaluated the outermost expression<br>7 * (3 + 4)<br>7 * 7<br>49
+	</pre>
+	<p name="ac5f" id="ac5f" class="graf graf--p graf-after--pre">Outermost is clearly less efficient — we’ve had to compute 3 + 4 twice, so the program took 5 steps instead of 4. This is no good. But
+		<strong class="markup--strong markup--p-strong">Haskell keeps a reference to each expression and shares these references as they’re passed down to parent expressions through the outermost reduction.</strong> Thus, when 3 + 4 is evaluated the first time, the reference to this expression now points to the expression, 7. Thus we get to skip the duplicate step.
+	</p>
+	<pre name="2fda" id="2fda" class="graf graf--pre graf-after--p">square(3 + 4)<br>(3 + 4) * (3 + 4) // evaluated the outermost expression<br>7 * 7 // both reduced at the same time due to reference sharing<br>49
+	</pre>
+	<blockquote name="62d6" id="62d6" class="graf graf--blockquote graf-after--pre">Fundamentally, lazy evaluation is outermost evaluation with reference sharing.</blockquote>
+	<p name="c904" id="c904" class="graf graf--p graf-after--blockquote">Haskell does all this stuff under the hood for you, and what that means is you can define things like infinite lists. For example, you can recursively define an infinite list of ones as 1 joined with itself.</p>
+	<pre name="bc9c" id="bc9c" class="graf graf--pre graf-after--p">ones = 1 : ones</pre>
+	<p name="483c" id="483c" class="graf graf--p graf-after--pre">Suppose you have a function
+		<em class="markup--em markup--p-em">take(n, list) </em>which takes the first n elements of a list. If we used innermost reduction, we’d recursively evaluate list forever, because it’s infinite. But instead, with outermost reduction, we lazily evaluate ones for just as many ones as we need!
+	</p>
+	<p name="339f" id="339f" class="graf graf--p graf-after--p">However, since JavaScript and most other programming languages use innermost reduction, the only way we can replicate these constructs is by treating arrays as functions. For example:</p>
+	<pre name="3388" id="3388" class="graf graf--pre graf-after--p">const makeOnes = () =&gt; {next: () =&gt; 1}<br>ones = makeOnes()<br>ones.next() // =&gt; 1<br>ones.next() // =&gt; 1
+	</pre>
+	<p name="7ff5" id="7ff5" class="graf graf--p graf-after--pre">Now we’ve effectively created a lazily evaluated infinite list based on the same recursive definition. Lets create an infinite list of natural numbers:</p>
+	<pre name="7fa0" id="7fa0" class="graf graf--pre graf-after--p">const makeNumbers = () =&gt; {<br> let n = 0<br> return {next: () =&gt; {<br> n += 1<br> return n<br> }<br>}<br>numbers = makeNumbers()<br>numbers.next() // 1<br>numbers.next() // 2<br>numbers.next() // 3
+	</pre>
+	<p name="dda8" id="dda8" class="graf graf--p graf-after--pre">In ES2015, there’s actually a standard for this and they’re called
+		<a href="https://en.wikipedia.org/wiki/Function_generator" data-href="https://en.wikipedia.org/wiki/Function_generator" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">function generators</a>
+		.
+	</p>
+	<pre name="0c5b" id="0c5b" class="graf graf--pre graf-after--p">function* numbers() {<br> let n = 0<br> while(true) {<br> n += 1<br> yield n
+		<br> }<br>}
+	</pre>
+	<p name="716b" id="716b" class="graf graf--p graf-after--pre">Laziness can give you huge performance gains. For example, check out
+		<a href="http://danieltao.com/lazy.js/" data-href="http://danieltao.com/lazy.js/" class="markup--anchor markup--p-anchor" rel="nofollow noopener" target="_blank">Lazy.js operations per second compared to Underscore and Lodash</a>
+		:
+	</p>
+</div>
+</body>
+</html>

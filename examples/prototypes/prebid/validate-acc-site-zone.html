@@ -1,0 +1,26 @@
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<script>
+
+    const utils = { logError: function(msg) { console.log('Error:', msg) } }
+    // validate account, site, zone
+    function validateRequiredIds (bid) {
+        const requiredParams = ['accountId', 'siteId', 'zoneId']
+        for (let i = 0; i < requiredParams.length; i++) {
+            bid.params[requiredParams[i]] = parseInt(bid.params[requiredParams[i]])
+            if (isNaN(bid.params[requiredParams[i]])) {
+                utils.logError('Rubicon bid adapter Error: wrong format of accountId or siteId or zoneId.')
+                return false
+            }
+        }
+        return true
+    }
+
+    console.log('result = ', validateRequiredIds({ params: { accountId: NaN, siteId: '100', zoneId: '202' } }))
+
+</script>
+</body>
+</html>

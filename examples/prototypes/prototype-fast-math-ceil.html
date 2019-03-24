@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>prototype fast math ceil</title>
+</head>
+<body>
+<script>
+	'use strict'
+	{
+		const compose = (a, b) => (c) => a(b(c))
+		
+		const divideByTwo = number => (number/2)
+		
+		const fastCeil = number => (number + (number % 1 === 0 ? 0 : 0.5))
+		
+		const divideAndCeil = compose(fastCeil, divideByTwo)
+		
+		/** Unit Tests */
+		{
+			/* 
+				NOTE:  A string value is added to end of the arrays at execution time 
+				DETAILS:  This is accomplished by concatenating an array containing the value necessary for the %s token  
+			*/
+			const LOG_OUTPUT_TEST_PASSED = ['%c passed %c %s', 'color:#00B446', 'color:#666666']
+			const LOG_OUTPUT_TEST_FAILED = ['%c fail %c %s', 'color:#C2292D', 'color:#AAAAAA']
+			const LOG_OUTPUT_INTEGRATION_TEST = ['%c %d %c dividedByTwo  %d  %c divideAndCeil  %s', 'color:#555555']
+			
+			let createTestDependencyDAO = (test, dependency) => {
+				return { test, dependency }
+			}
+			
+			let createTestResultDAO = (test, passedResult) => {
+				return { test, passedResult }
+			}
+			
+			let createIntegrationTestResultDAO = (initialValue, divideResult, divideAndCeilResult) => {
+				return { initialValue, divideResult, divideAndCeilResult }
+			}
+			
+			let outputTestResult = (testResultDAO) => {
+				if (testResultDAO.passedResult) {
+					console.log(...LOG_OUTPUT_TEST_PASSED, testResultDAO.test)
+				}
+				else {
+					console.log(...LOG_OUTPUT_TEST_FAILED, testResultDAO.test)
+				}
+			}
+			
+			let outputIntegrationTestResult = (integrationTestResultDAO) => {
+				console.log(...LOG_OUTPUT_INTEGRATION_TEST, integrationTestResultDAO.initialValue, 'color:#999999', integrationTestResultDAO.divideResult, 'color:#AAAAAA', integrationTestResultDAO.divideAndCeilResult)
+			}
+			
+			
+			function callTestWithDependency (test, dependency) {
+				let passedResult = test.call(null, dependency)
+				return createTestResultDAO(test.name, passedResult)
+			}
+			
+			function testDivideByTwo (dependency) {
+				return (dependency.call(null, 3) === 1.54)
+			}
+			
+			function testFastCeil (dependency) {
+				return (dependency.call(null, 3.5) === 4)
+			}
+			
+			function testDivideAndCeil (dependency) {
+				return (dependency.call(null, 11) === 6)
+			}
+			
+			function runTests (testGroup, largeDataSet) {
+				return {
+					testResultData: testGroup.reduce((accumulator, currentValue) => {
+						accumulator.push(callTestWithDependency(currentValue.test, currentValue.dependency))
+						return accumulator 
+					}, []),
+					integrationTestResultData: largeDataSet.reduce((accumulator, currentValue) => {
+						accumulator.push(createIntegrationTestResultDAO(currentValue, divideByTwo(currentValue), divideAndCeil(currentValue)))
+						return accumulator
+					}, [])
+				}
+			}
+			
+			let testResultData = runTests([
+					createTestDependencyDAO(testDivideByTwo, divideByTwo),
+					createTestDependencyDAO(testFastCeil, fastCeil),
+					createTestDependencyDAO(testDivideAndCeil, divideAndCeil)
+				], 
+				[4, 5, 10, 13, 21, 22, 33, 38, 51, 101])
+			
+			
+			console.group('[Tests]')
+			testResultData.testResultData.forEach(outputTestResult)
+			console.groupEnd()
+			
+			console.groupCollapsed('[Integration Tests]')
+			testResultData.integrationTestResultData.forEach(outputIntegrationTestResult)
+			console.groupEnd()
+			
+			
+			let total = testResultData.testResultData.length,
+				pass = testResultData.testResultData.reduce((accumulator, currentValue) => {
+					return accumulator + ((currentValue.passedResult) ? 1 : 0)
+				}, 0),
+				fail = total - pass,
+				coverage = (pass / total) * 100
+			
+			console.log('\nAll Tests Complete: %c Score: %d\% %c (failed #%d %c passed #%d)', 'color:orange', coverage, 'color:#C2292D', fail, 'color:#00B446', pass)
+		}
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "idettman.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idettman/idettman.github.io.git"
+  },
+  "author": "Isaac A. Dettman <idettman@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/idettman/idettman.github.io/issues"
+  },
+  "homepage": "https://github.com/idettman/idettman.github.io#readme",
+  "dependencies": {
+    "redux": "^4.0.1"
+  }
+}
