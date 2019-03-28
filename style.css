@@ -1,3 +1,6 @@
+html {
+  background-color: #0a0a0a;
+}
 body {
   font-size: 1rem;
   font-family: 'Merriweather Sans', sans-serif;
@@ -82,7 +85,10 @@ a {
 .content {
   position: absolute;
   top: 3.5rem;
-  left: 19.5rem;
+  left: 18.8rem;
   display: block;
   white-space: pre;
+  border-left: 1px solid #ccff39;
+  padding-left: 1rem;
+  background-color: white;
 }
