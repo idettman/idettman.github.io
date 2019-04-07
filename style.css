@@ -1,5 +1,6 @@
 html {
   background-color: #0a0a0a;
+  font-size: 16px;
 }
 body {
   font-size: 1rem;
@@ -8,87 +9,98 @@ body {
   margin: 0;
 }
 
-code {
-  font-size: 1.2rem;
-  color: brown;
-}
-
 h1, h2, h3, h4, h5 {
   margin: 0;
 }
 h1 {
-  padding: 0.5rem 0 1rem 1rem;
-  color: #d4d4d4;
-  font-weight: normal;
-  font-size: 2rem;
-  background-color: black;
+  color: #2b2929;
 }
 h2 {
   color: #000000;
-  font-size: 1.8rem;
-  margin-top: 1.5rem;
+  margin: 0.5rem;
+  font-size: 1.75rem;
 }
 h3 {
   color: #4203f4;
-  font-size: 1.75rem;
+  font-size: 5rem;
 }
 h4 {
   color: #365baa;
-  font-size: 1.5rem;
 }
 
-.navcontainer {
-  margin-bottom: 1.5rem;
+ul {
+  display: block;
+  border: 0 none;
+  list-style-type: none;
+  padding: 0;
 }
 
-.tools {
-  width: 300px;
+ul > li > a {
+  display: block;
+  padding: 0.5rem;
+}
+
+.display-block {
   display: block;
 }
 
-.patterns {
-  background-color: #e91e63;
+.left-navigation {
+  width: 17rem;
 }
 
-.fav {
-  background-color: #9e9e9e;
+.top-links {
+  background-color: black;
+}
+.top-links > li > a {
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
+  color: #d5e8e2;
+  
 }
 
-.site {
-  background-color: black
+.middle-links {
+  background-color: #ff6161;
+  margin-left: 2rem;
+}
+.middle-links > li > a {
+  color: #000000;
+  font-size: 0.9rem;
+  padding: 0.75rem 0.5rem 0.1rem 0.75rem;
+  text-decoration: underline;
 }
 
-.libs {
-  background-color: midnightblue;
+.bottom-links {
+  background-color: #191919;
 }
+.bottom-links > li > a {
+  color: #946a6a;
+}
+
 .bg-black {
   background-color: black;
 }
 .white a, .white {
   color: #fffefe;
 }
-ul {
-  display: block;
-  border: 0 none;
-  list-style-type: none;
-  margin: 0 0 0 0;
-  padding: 0;
-}
 
 a {
-  display: block;
   text-decoration: none;
-  padding: 10px 20px;
   color: #4203f4;
 }
 
 .content {
   position: absolute;
-  top: 3.5rem;
-  left: 18.8rem;
+  top: 2.75rem;
+  left: 17.1rem;
+  font-size: 0.9rem;
+  line-height: 1.25;
   display: block;
   white-space: pre;
-  border-left: 1px solid #ccff39;
+  padding-top: 1rem;
   padding-left: 1rem;
   background-color: white;
 }
+
+.content > code {
+  color: brown;
+}
+

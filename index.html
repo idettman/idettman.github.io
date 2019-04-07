@@ -10,46 +10,37 @@
 
 <main>
   <header>
-    <h1>isaac dettman: github</h1>
+    <h1>github @username idettman</h1>
   </header>
 
-  <div class="tools white">
-    <ul class="site navcontainer">
+  <div class="left-navigation display-block white">
+    <ul class="navcontainer top-links">
       <li>
-        <a href="pages/functional.html">Functional</a>
-        <a href="pages/physics.html">Physics</a>
-        <a href="pages/python-utils.html">Python</a>
-        <a href="pages/stack-edit.html">Stack Edit</a>
+        <a href="pages/functional.html">functional js</a>
+        <a href="http://blog.cleancoder.com/uncle-bob/2017/07/11/PragmaticFunctionalProgramming.html">pragmatic fp</a>
+        <a href="pages/python-utils.html">python</a>
       </li>
     </ul>
     
-    <ul class="patterns navcontainer">
+    <ul class="navcontainer middle-links">
       <li>
-        <a href="http://blog.cleancoder.com/uncle-bob/2017/07/11/PragmaticFunctionalProgramming.html">Pragmatic
-          Functional Programming</a>
-        <a href="https://sinon.org/algorithms/">Algorithmic cheatsheet</a>
-      </li>
-    </ul>
-
-    <ul class="libs navcontainer">
-      <li>
-        <a href="https://github.com/bahmutov/code-snippets">bahmutov/code-snippets</a>
-        <a href="https://github.com/tylingsoft/markdown-plus">markdown-plus github</a>
-        <a href="https://github.com/gnab/js-workshop">In-browser Javascript editor and evaluator</a>
-      </li>
-    </ul>
-    
-    <ul class="fav navcontainer">
-      <li>
+        <a href="https://sinon.org/algorithms/">algorithmic cheatsheet</a>
         <a href="https://mermaidjs.github.io/">mermaidjs.github.io</a>
         <a href="http://mdp.tylingsoft.com/"
            title="Markdown Plus ('M+' or 'mdp' for short) is a markdown editor with extra features."
-        >Markdown Plus: Online Editor</a>
+        >markdown plus: online editor</a>
+        <a href="pages/stack-edit.html">stack edit</a>
       </li>
     </ul>
-
+    
+    <ul class="navcontainer bottom-links">
+      <li>
+        <a href="https://github.com/bahmutov/code-snippets">github: bahmutov/snippets</a>
+      </li>
+    </ul>
+    
   </div>
-  <div class="content"><h2>IntelliJ find and replace Regex</h2>
+  <div class="content"><div id="appContainer"></div><h2>IntelliJ find and replace Regex</h2>
     Reformat the following time value <code>"[2:15 PM]"</code> by removing the brackets
     Find <code>\[(.*)\]</code>
     Replace <code>$1</code>
