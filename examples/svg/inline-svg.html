@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>inline-svg</title>
+  <style type="text/css">
+    svg {
+      vertical-align: top;
+      display: inline-block;
+    }
+  </style>
+  <script>
+    var SVG=function(h,w){
+      var NS="http://www.w3.org/2000/svg";
+      var svg=document.createElementNS(NS,"svg");
+      svg.width=w;
+      svg.height=h;
+      return svg;
+    }
+
+    var rect=function(h,w,fill){
+      var NS="http://www.w3.org/2000/svg";
+      var SVGObj= document.createElementNS(NS,"rect");
+      SVGObj.width.baseVal.value=w;
+      SVGObj.height.baseVal.value=h;
+      SVGObj.setAttribute("height",h);
+      SVGObj.style.fill=fill;
+      return SVGObj;
+    }
+
+  </script>
+</head>
+<body><div><!--
+ 
+--><svg width="100" height="200" viewBox="0 0 50 50" preserveAspectRatio="xMinYMin meet"
+     style="border: 1px solid #cccccc;">
+  <circle cx="25" cy="25" r="25" style="stroke: #000000; fill:none;"></circle>
+</svg><!-- 
+
+--><svg width="500" height="200" viewBox="0 0 500 200" preserveAspectRatio="xMidYMid meet">
+  <rect class="thin-border" x="0" y="0" width="500" height="200" style="stroke: #00FF00; fill:none;"></rect>
+  <rect class="thin-border" x="225" y="75" width="50" height="50" style="stroke: #4203f4; fill:none;">
+    <animateTransform attributeType="xml" attributeName="transform" type="rotate"
+                      from="0 250 100"
+                      to="360 250 100"
+                      dur="4s" repeatCount="indefinite"></animateTransform>
+  </rect>
+  <circle cx="25" cy="25" r="25" style="stroke: #000000; fill:none;"></circle>
+</svg><!-- 
+
+--><svg width="500" height="200" viewBox="0 0 500 200" style="border: 10px solid #006e5a;">
+  <rect x="0" y="0" width="500" height="200" style="stroke: #000000; fill:none;"></rect>
+</svg></div><!--
+ 
+--><svg id="clipPathExample" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <clipPath id="inline-svg-clipPath">
+    <circle cx="50" cy="50" r="50" fill="black"></circle>
+  </clipPath>
+  <rect x="0" y="0" width="100" height="100" fill="red"></rect>
+  <text>foo</text>
+</svg><!--
+ 
+--><div id="testClipPathExample"
+     style="border: 20px solid gold; width: 100px; height: 100px; color: white; background: black;clip-path: url(#inline-svg-clipPath)">
+  ONe TWO
+  ONe TWO
+  ONe TWO
+  ONe TWO
+  ONe TWO
+  ONe TWO
+  ONe TWO
+</div><!--
+ 
+--><svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 484.4 261" style="border: 4px solid #54396e;">
+  <defs>
+    <ellipse id="ellipseClip" cx="239.7" cy="39.2" rx="65" ry="62.5"></ellipse>
+    <clipPath id="clipPathId">
+      <use xlink:href="#ellipseClip" overflow="visible"></use>
+    </clipPath>
+  </defs>
+  <g id="globe">
+    <use xlink:href="#ellipseClip" fill="#A4CAE1" overflow="visible"></use>
+    <g id="middle" clip-path="url(#clipPathId)">
+      <rect x="0" y="0" width="484" height="70" fill="red"></rect>
+    </g>
+    <g id="left" clip-path="url(#clipPathId)">
+      <rect x="0" y="0" width="484" height="10" fill="yellow"></rect>
+    </g>
+  </g>
+</svg><!--
+ 
+--><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="border: 3px solid lightseagreen;">
+  <style type="text/css">
+    <![CDATA[
+     .one {
+      fill: deeppink;
+    }
+    ]]>
+  </style>
+  <rect width="400" height="200" class="one"></rect>
+</svg><!-- 
+
+--><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="border: 10px solid black;"> 
+  <defs>
+    <polyline id="fan-clipShape" points="12.5,79.5 89.2,86.6 89.2,2.5 12.5,2.5    "></polyline>
+    <clipPath id="fan-clipPath">
+      <use xlink:href="#fan-clipShape"></use>
+    </clipPath>
+  </defs>
+  <g id="fan" clip-path="url(#fan-clipPath)">
+    <rect x="0" y="0" width="484" height="100" fill="purple"></rect>
+  </g>
+  <g id="handles">
+    <rect x="0" y="0" width="484" height="70" fill="orange"></rect>
+  </g>
+</svg><!-- 
+
+--><script>
+  const clipPathExample = document.getElementById('clipPathExample')
+  clipPathExample.style.border = '1px solid red'
+</script><!--
+ 
+--></body>
+</html>

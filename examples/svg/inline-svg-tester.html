@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script>
+    function checkSvgSupport () {
+      return document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#BasicStructure', '1.1') !== false;
+      
+    }
+
+    window.addEventListener('load', function() {
+      if (!checkSvgSupport()) {
+        alert('SVG not supported!');
+      }
+      // alert('SVG supported!');
+    }, false);
+
+  </script>
+
+  <script type="image/svg+xml"><![CDATA[
+  <svg width="466" height="265" id="svg11242"></svg>
+]]></script>
+
+
+</head>
+<body>
+
+</body>
+</html>

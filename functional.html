@@ -4,34 +4,23 @@
   <meta charset="UTF-8">
   <title>Functional Programming in JS</title>
   <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans" rel="stylesheet">
-  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body style="background-color: white;">
+<body>
 <header>
-  <h1>Functional Programming in JS</h1>
+  <h1>Functional Programming</h1>
 </header>
-<div>
-  <h2>Functional Programming Overview</h2>
-  <h3>Pure Functions</h3>
-  <p>At the heart of functional programming is the formal mathematics of describing logic:
-    <a href="https://en.wikipedia.org/wiki/Lambda_calculus">lambda calculus</a>
-    . Mathematicians like to describe programs as transformations of data which leads to the first concept — 
-    <a href="https://en.wikipedia.org/wiki/Pure_function">pure functions</a>
-    . Pure functions are functions without
-    <a href="https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29" target="_blank">side-effects</a>
-    .
-    <strong>Pure functions depend only on the inputs of the function, and the output should be the exact same for the same input.</strong> Here's an example:
-  </p>
-  <pre>
-		<strong>// pure function</strong><br>const add10 = (a) =&gt; a + 10
-	</pre>
-  <pre>
-		<strong>// impure function due to external non-constants<br></strong>let x = 10<br>const addx = (a) =&gt; a + x
-	</pre>
-  <pre>
-		<strong>// also impure due to side-effect<br></strong>const setx = (v) =&gt; x = v
-	</pre>
-  <p>The impure function indirectly depends on
+<div class="left-navigation display-block">
+  <ul class="navcontainer top-links bgcolor-black">
+    <li id="site-navigation-container"></li>
+  </ul>
+</div>
+<div class="content"><div id="appContainer"></div><h2>Concepts</h2>
+  <h3>Pure Functions</h3><p>At the heart of functional programming is the formal mathematics of describing logic:
+    <a href="https://en.wikipedia.org/wiki/Lambda_calculus">lambda calculus</a>. Mathematicians like to describe programs as transformations of data which leads to the first concept — 
+    <a href="https://en.wikipedia.org/wiki/Pure_function">pure functions</a>. Pure functions are functions without
+    <a href="https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29" target="_blank">side-effects</a>.<strong>Pure functions depend only on the inputs of the function, and the output should be the exact same for the same input.</strong> Here's an example:
+  </p><pre><strong>// pure function</strong><br>const add10 = (a) =&gt; a + 10</pre><pre><strong>// impure function due to external non-constants<br></strong>let x = 10<br>const addx = (a) =&gt; a + x</pre><pre><strong>// also impure due to side-effect<br></strong>const setx = (v) =&gt; x = v</pre><p>The impure function indirectly depends on
     <em>x</em>. If you were to change
     <em>x</em>, then
     <em>addx</em> would output a different value for the same inputs. This makes it hard
@@ -41,15 +30,10 @@
     to worry about externalises that could cause problems, like anything that could change
     <em>x</em> while when you're writing the
     <em>addx</em> function.</p>
-  <h3>Function Composition</h3>
-  <p>One nice thing about pure functions is that you can
-    <em>compose</em> them into new functions. One special operator used to describe
+  <h3>Function Composition</h3><p>One nice thing about pure functions is that you can<em>compose</em> them into new functions. One special operator used to describe
     programs in lambda calculus is
     <a href="https://en.wikipedia.org/wiki/Function_composition" target="_blank"><em>compose</em></a>
-    . Compose takes two functions and “composes” them into a new function. Check it out:
-  </p>
-  <pre>const add1 = (a) =&gt; a + 1<br>const times2 = (a) =&gt; a * 2<br>const compose = (a, b) =&gt; (c) =&gt; a(b(c))<br>const add1OfTimes2 = compose(add1, times2)<br>add1OfTimes2(5) // =&gt; 11
-	</pre>
+    . Compose takes two functions and “composes” them into a new function. Check it out:</p><pre>const add1 = (a) =&gt; a + 1<br>const times2 = (a) =&gt; a * 2<br>const compose = (a, b) =&gt; (c) =&gt; a(b(c))<br>const add1OfTimes2 = compose(add1, times2)<br>add1OfTimes2(5) // =&gt; 11</pre>
   <p>The
     <em>compose</em> is analogous to the preposition “of”. Notice the order of the
     arguments and how they're evaluated: add one
@@ -339,5 +323,6 @@
 		<br> }<br>}
 	</pre>
 </div>
+<script src="site-navigation.js"></script>
 </body>
 </html>

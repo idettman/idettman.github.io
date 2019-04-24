@@ -1,0 +1,35 @@
+SVG is well supported in IE 9 and up, and all modern browsers, 
+as well as Opera Mini (new development! (https://dev.opera.com/blog/opera-mini-server-upgrade/)).
+
+Fallbacks #
+I implement a simple feature text inline in the <head> . 
+  This adds an .svg class to the <html> element, 
+which you can use to add fallback content.
+
+
+Add the contents of your sprite to the markup in a hidden container.
+<div hidden>
+  <svg>...</svg>
+</div>
+
+CSS properties for SVG element
+display: inline-block;
+fill: currentColor;
+height: 0;
+width: 0;
+
+
+/**
+* Display icons when browser supports SVG.
+* Inherit height, width, and color.
+*/
+.svg .icon { height: 1em; width: 1em; }
+
+To use an icon, simply reference its ID using the <use> element.
+<svg class="icon"><use xlink:href="#icon-logo"></use></svg>
+  
+  I’ve also found that inlining the sprite results in faster peceived performance.
+  
+  While external svg files will gain you some browser caching benefits, 
+  I’ve found that perceived load times are better using the inlined sprite approach, 
+  as the icons are rendered immediately.

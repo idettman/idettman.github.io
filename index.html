@@ -6,36 +6,23 @@
   <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans" rel="stylesheet">
   <link rel="stylesheet" href="style.css"/>
 </head>
-<body>
+<body style="background-color: gold">
 
 <main>
   <header>
     <h1>github @username idettman</h1>
   </header>
 
-  <div class="left-navigation display-block white">
-    <ul class="navcontainer top-links">
-      <li>
-        <a href="pages/functional.html">functional js</a>
-        <a href="http://blog.cleancoder.com/uncle-bob/2017/07/11/PragmaticFunctionalProgramming.html">pragmatic fp</a>
-        <a href="pages/python-utils.html">python</a>
-      </li>
+  <div class="left-navigation display-block">
+    <ul class="navcontainer top-links bgcolor-black">
+      <li id="site-navigation-container"></li>
     </ul>
     
-    <ul class="navcontainer middle-links">
+    <ul class="navcontainer margin-left-2x">
       <li>
-        <a href="https://sinon.org/algorithms/">algorithmic cheatsheet</a>
-        <a href="https://mermaidjs.github.io/">mermaidjs.github.io</a>
-        <a href="http://mdp.tylingsoft.com/"
-           title="Markdown Plus ('M+' or 'mdp' for short) is a markdown editor with extra features."
-        >markdown plus: online editor</a>
-        <a href="pages/stack-edit.html">stack edit</a>
-      </li>
-    </ul>
-    
-    <ul class="navcontainer bottom-links">
-      <li>
-        <a href="https://github.com/bahmutov/code-snippets">github: bahmutov/snippets</a>
+        <a href="https://mermaidjs.github.io/" class="nav-anchor">mermaidjs.github.io</a>
+        <a href="http://mdp.tylingsoft.com/" title="Markdown Plus ('M+' or 'mdp' for short) is a markdown editor with extra features."
+           class="nav-anchor">markdown plus: online editor</a>
       </li>
     </ul>
     
@@ -181,9 +168,9 @@
     
     If you omit the link name, target's name is used. The above command creates a link to
     <code>/media/fileserver/anotherfile.ods</code> in <code>/home/user/anotherfile.ods</code>
-    
   </div>
 
 </main>
+<script src="site-navigation.js"></script>
 </body>
 </html>
