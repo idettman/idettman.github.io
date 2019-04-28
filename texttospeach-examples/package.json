@@ -1,0 +1,14 @@
+{
+  "name": "texttospeach-examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Isaac A. Dettman <idettman@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "say": "^0.15.0"
+  }
+}
