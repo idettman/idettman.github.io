@@ -47,7 +47,7 @@ function Simulation (ctx) {
   const height = ctx.canvas.height;
   const damping = 0.99;
 
-  while (bodies.length < 70) {
+  while (bodies.length < 220) {
     const body = new Body(Math.random() * (ctx.canvas.width - 50) + 25, Math.random() * (ctx.canvas.height - 50) + 25, Math.random() * 20 + 5);
     let collides = false;
     for (let i = 0, l = bodies.length; i < l; i++) {
@@ -170,9 +170,8 @@ function Simulation (ctx) {
   function draw (ctx, bodies) {
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
     for (let i = 0, l = bodies.length; i < l; i++) {
-      const body = bodies[i];
       ctx.beginPath();
-      ctx.arc(body.x, body.y, body.radius, 0, Math.PI * 2, false);
+      ctx.arc(bodies[i].x, bodies[i].y, bodies[i].radius, 0, Math.PI * 2, false);
       ctx.stroke();
     }
   }
@@ -195,9 +194,10 @@ function Simulation (ctx) {
     }
   }
 
-  this.step = function step () {
+  this.step = function step (d) {
     const steps = 2;
-    const delta = 1 / steps;
+    // const delta = 1 / steps;
+    const delta = 0.7 / steps;
     for (let i = 0; i < steps; i++) {
       gravity(bodies);
       accelerate(delta, bodies);
@@ -230,38 +230,29 @@ function animLoop (render) {
   loop(lastFrame);
 }
 
-(function() {
-  /**
-   * @type {HTMLCanvasElement}
-   */
-  const canvas = document.getElementById('final');
+/**
+ * @type {HTMLCanvasElement}
+ */
+const canvas = document.getElementById('final');
 
-  /**
-   * @param {MouseEvent} event
-   */
-  function clickHandler (event) {
-    const x = event.clientX - canvas.offsetLeft;
-    const y = event.clientY - canvas.offsetTop;
-    simulation.bodies.push(new Body(x, y, Math.random() * 20 + 5));
-  }
+/**
+ * @param {MouseEvent} event
+ */
+function clickHandler (event) {
+  const x = event.clientX - canvas.offsetLeft;
+  const y = event.clientY - canvas.offsetTop;
+  simulation.bodies.push(new Body(x, y, Math.random() * 20 + 5));
+}
 
-  canvas.addEventListener('click', clickHandler);
+canvas.addEventListener('click', clickHandler);
 
-  /**
-   * @type {CanvasRenderingContext2D | WebGLRenderingContext}
-   */
-  const ctx = canvas.getContext('2d');
-  const simulation = new Simulation(ctx);
-  
-  animLoop(function( deltaT ) {
-    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-    simulation.step();
-    // optional 2nd arg: elem containing the animation
-  });
-  
-  /*setInterval(function(){
-    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-    simulation.step();
-  }, 30);*/
+/**
+ * @type {CanvasRenderingContext2D | WebGLRenderingContext}
+ */
+const ctx = canvas.getContext('2d');
+const simulation = new Simulation(ctx);
 
-})();
+animLoop(function( deltaT ) {
+  ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+  simulation.step(deltaT);
+});
