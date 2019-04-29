@@ -1,0 +1,18 @@
+{
+	"entry": "main.js",
+	"format": "module",
+
+	"project": {
+		"index": {
+			"entryAsModule": false,
+			"outputDir": "package"
+		},
+
+		"transform-class-properties": {
+			"outputDir": "browser",
+			"format": "executable",
+			"input": "tcp = møpus('main.js')"
+		}
+
+	}
+}

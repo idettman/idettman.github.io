@@ -1,0 +1,13 @@
+{
+	"entry": "Hero.js",
+	"project": {
+		"cocu": {"minify": false},
+		"bundle": {
+			"entry": "Super"
+		}
+	},
+
+	"logTimers": true,
+	"logInput": true,
+	"logOutput": true
+}

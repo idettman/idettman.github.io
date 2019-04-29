@@ -1,0 +1,42 @@
+{
+  "name": "react-redux-learning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "module": "module.js",
+  "browser": "dist/browser.js",
+  "scripts": {
+    "build": "babel *.mjs lib/*.mjs --out-dir dist",
+    "test": ""
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "author": "Isaac A. Dettman <idettman@gmail.com>",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.1"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "modules": false,
+          "targets": {
+            "chrome": "58"
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "transform-runtime"
+    ]
+  }
+}

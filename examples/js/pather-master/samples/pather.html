@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Linear trajectory generator</title>
+  <link href="./css/path.css" rel="stylesheet" type="text/css">
+ </head>
+<body>
+ <br/>
+ <center>
+  <div class="blueprint img-rounded">
+    <div id="graphic" style="width:600px;height:300px;"></div>
+  </div>
+ </center>
+ <script src="./js/jquery.js" type="text/javascript"></script>
+ <script src="./js/flot.js" type="text/javascript"></script> <!-- To draw graphics -->
+
+ <script src="../lib/sylvester/sylvester.js" type="text/javascript"></script>
+ <script src="../src/pather.js" type="text/javascript"></script>
+ <script language="javascript">
+
+var sequence = [{
+    "t": 10,
+    "q": 40,
+    "type": "cubic"
+}, {
+    "t": 20,
+    "q": 20,
+    "type": "bezier"
+}, {
+    "t": 50,
+    "q": 50,
+    "type": "bezier"
+}];
+var resolution = 20;
+
+function drawGraphic() {
+    var line = [];
+    var plotData = [];
+
+    var t0 = 0;
+    var q0 = 0;
+    for (var i=0; i<sequence.length; ++i) {
+        var tf = sequence[i].t;
+        var qf = sequence[i].q;
+        var step = (tf - t0) / resolution;
+
+        // This line actually tests the Pather.
+        // All other stuff is only for showing it in a nice graphic
+        var pather = new Pather(t0, q0, tf, qf, sequence[i].type);
+
+        var q = 0;
+        for (var t = t0; t <= tf; t += step) {
+            q = pather.getValue(t); // And this line to get the value
+            line.push([t, q]);
+        }
+        t0 = tf;
+        q0 = q;
+    }
+    plotData.push( {"data": line, "color": "#ff4000"} );
+    $.plot($("#graphic"), plotData,
+           {
+              grid: {
+                 color: "#bfbfbf",
+                 borderColor: "#fff"
+              }
+           });
+ }
+ drawGraphic();
+
+ </script>
+</body>
+</html>

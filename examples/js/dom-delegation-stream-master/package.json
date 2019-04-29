@@ -1,0 +1,42 @@
+{
+  "name": "dom-delegation-stream",
+  "version": "1.0.1",
+  "description": "streaming DOM event delegation",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run lint && browserify test/index.js | ghostface | tap-set-exit",
+    "lint": "standard index.js test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jarofghosts/dom-delegate-stream.git"
+  },
+  "keywords": [
+    "dom",
+    "event",
+    "delegation",
+    "stream"
+  ],
+  "author": "jesse keane <me@jessekeane.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jarofghosts/dom-delegate-stream/issues"
+  },
+  "homepage": "https://github.com/jarofghosts/dom-delegate-stream",
+  "devDependencies": {
+    "browserify": "^11.0.1",
+    "eslint": "^1.2.1",
+    "eslint-config-standard": "^4.1.0",
+    "eslint-config-standard-react": "^1.0.4",
+    "eslint-plugin-react": "^3.2.3",
+    "eslint-plugin-standard": "^1.2.0",
+    "ghostface": "^1.4.0",
+    "standard": "^5.1.0",
+    "tap-set-exit": "^1.1.0",
+    "tape": "^4.2.0"
+  },
+  "dependencies": {
+    "dom-delegate": "^2.0.3",
+    "through": "^2.3.6"
+  }
+}

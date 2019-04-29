@@ -1,0 +1,56 @@
+{
+  "name": "traits.js",
+  "version": "1.1.5",
+  "description": "traits.js is a minimal, standards-compliant trait composition library for Javascript.",
+  "main": "dist/traits.js",
+  "module": "src/traits.mjs",
+  "directories": {
+    "test": "tests"
+  },
+  "files": [
+    "dist/traits.min.js",
+    "dist/traits.js",
+    "src/traits.js"
+  ],
+  "scripts": {
+    "test": "karma start karma.conf.js",
+    "prepublish": "npm run build",
+    "build": "rollup src/traits.mjs --output.file dist/traits.js --output.format umd --name Trait & rollup --config rollup.minify.config.js --output.file dist/traits.min.js --output.format umd --name Trait"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/traitsjs/traits.js.git"
+  },
+  "keywords": [
+    "traits",
+    "object",
+    "composition",
+    "OOP"
+  ],
+  "author": "Tom Van Cutsem",
+  "maintainers": [
+    "Jon Ege Ronnenberg <jon.ronnenberg+traits.js@gmail.com>"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/traitsjs/traits.js/issues"
+  },
+  "homepage": "https://github.com/traitsjs/traits.js#readme",
+  "devDependencies": {
+    "codecov": "^3.0.3",
+    "karma": "^2.0.4",
+    "karma-coverage": "^1.1.2",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-qunit": "^2.1.0",
+    "phantomjs-prebuilt": "^2.1.16",
+    "qunit": "^2.6.1",
+    "rollup": "^0.62.0",
+    "rollup-plugin-uglify": "^4.0.0",
+    "uglify-es": "^3.3.9"
+  },
+  "contributors": [
+    "dotnetCarpenter",
+    "Nathan Stott",
+    "Mark S. Miller"
+  ]
+}

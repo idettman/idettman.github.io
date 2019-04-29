@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Universe</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="slides.js" type="module"></script>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Amatic+SC"/>
+    <style>
+        @keyframes fadein {
+            0% {
+                opacity: 0.0;
+            }
+            100% {
+                opacity: 1.0;
+            }
+        }
+
+        @keyframes fadeout {
+            0% {
+                opacity: 1.0;
+            }
+            100% {
+                opacity: 0.0;
+            }
+        }
+
+        .fadein {
+            opacity: 1.0;
+            animation-name: fadein;
+            animation-duration: 2s;
+            animation-timing-function: ease-out;
+        }
+
+        .fadeout {
+            opacity: 1.0;
+            animation-name: fadeout;
+            animation-duration: 1s;
+            animation-timing-function: ease-in;
+        }
+    </style>
+    <script type="module">
+        import {Policy} from "./modules/policy.js";
+        import {Chord} from "./modules/chord.js";
+        import {readAudio, mouse, hsla, quadraticBezier} from "./modules/standard.js";
+        import {echo} from "./modules/effects.js";
+        import {midiToFrequency, dbToGain} from "./modules/neutrons.js";
+        import {Exp} from "./modules/mapping.js";
+        import {Limiter} from "./worklets/Limiter.js";
+
+        const context = Policy.newAudioContext();
+        const master = context.createGain();
+        master.gain.value = dbToGain(-15.0);
+
+        class Source {
+            constructor(index, x, y) {
+                this.index = index;
+                this.x = x;
+                this.y = y;
+
+                this.envelope = null;
+                this.oscillator = null;
+                this.color = hsla(Math.random(), 0.75, 0.75, 1.0);
+                this.buffer = buffers[this.index % numBuffers];
+                this.inside = false;
+                this.fltMap = new Exp(20, 20000);
+            }
+
+            update(inside, gain, x, y) {
+                if (!this.inside && inside) {
+                    this.envelope = context.createGain();
+                    this.envelope.gain.value = gain;
+                    this.panner = context.createStereoPanner();
+                    this.panner.pan.value = x;
+                    this.oscillator = context.createBufferSource();
+                    this.oscillator.buffer = this.buffer;
+                    this.oscillator.loop = true;
+                    this.oscillator.detune.value = (Math.random() - Math.random()) * 14.0; // cents
+                    this.oscillator.start();
+                    this.filter = context.createBiquadFilter();
+                    this.filter.type = "peaking";
+                    this.filter.gain.value = 20.0;
+                    this.filter.frequency.value = this.fltMap.y((y + 1.0) * 0.5);
+                    this.oscillator.connect(this.filter).connect(this.envelope).connect(this.panner).connect(master);
+                    this.inside = true;
+                }
+                if (this.inside) {
+                    if (inside) {
+                        const time = context.currentTime + 0.016;
+                        this.envelope.gain.linearRampToValueAtTime(gain, time);
+                        this.panner.pan.linearRampToValueAtTime(x, time);
+                        this.filter.frequency.exponentialRampToValueAtTime(this.fltMap.y((y + 1.0) * 0.5), time);
+                    } else {
+                        const endTime = context.currentTime + 0.016;
+                        this.envelope.gain.linearRampToValueAtTime(0.0, endTime);
+                        this.oscillator.stop(endTime);
+                    }
+                    this.inside = inside;
+                }
+            }
+
+            createGradient(context, x, y, r) {
+                const gradient = context.createRadialGradient(x, y, 0, x, y, r);
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(1, "black");
+                return gradient;
+            }
+        }
+
+        const configFinish = () => {
+            const button = document.querySelector("button");
+            button.style.display = "inline";
+            button.onclick = ignore => {
+                const audio = new Audio();
+                audio.setAttribute("crossorigin", "");
+                audio.src = "files/track/kepz-shmar.ogg";
+                audio.volume = dbToGain(-3.0);
+                Policy.playAudio(audio);
+                button.remove();
+                const label = document.createElement("h5");
+                label.style.fontFamily = "Amatic SC";
+                label.textContent = "Thank You!";
+                label.style.color = "#28E5FF";
+                label.style.fontSize = "160px";
+                label.style.position = "absolute";
+                label.style.top = "50%";
+                label.style.left = "50%";
+                label.style.transform = "translate(-50%, -50%)";
+                label.style.userSelect = "none";
+                label.className = "fadein";
+                document.body.appendChild(label);
+            };
+        };
+
+        let preloaded = false;
+        const onPreloaded = (() => {
+            const label = document.createElement("h5");
+            label.textContent = "[RENDERING UNIVERSE]";
+            label.style.color = "#28E5FF";
+            label.style.fontSize = "64px";
+            label.style.position = "absolute";
+            label.style.top = "50%";
+            label.style.left = "50%";
+            label.style.transform = "translate(-50%, -50%)";
+            label.style.userSelect = "none";
+            document.body.appendChild(label);
+            return () => {
+                label.addEventListener("animationend", ignore => {
+                    label.remove();
+                    configFinish();
+                });
+                label.className = "fadeout";
+                preloaded = true;
+            };
+        })();
+
+        const numKeys = 6;
+        const numOctaves = 4;
+        const compose = Chord.compose(Chord.Minor, 0, 0, numKeys);
+        const numFreqs = numKeys * numOctaves;
+        const params = [[30.0, 1.1, 0.0], [60.0, 1.2, 0.0], [90.0, 2.8, 0.5], [120.0, 1.2, 0.25]];
+        const numBuffers = numFreqs * params.length;
+        const frequencies = new Float32Array(numFreqs);
+        let index = 0;
+        for (let octave = 0; octave < numOctaves; octave++) {
+            for (let key of compose) {
+                frequencies[index++] = midiToFrequency((3 + octave) * 12 + key, 400.0);
+            }
+        }
+        const fftSize = 1 << 17;
+        const buffers = [];
+        for (let i = 0; i < numBuffers; i++) {
+            buffers[i] = context.createBuffer(1, fftSize, context.sampleRate);
+        }
+        const createHarmonics = (bandWidth, bandWidthScale, notchAmount) => {
+            const brightness = -Math.pow(2.0, -0.0);
+            const metal = 0.0;
+            const distance = 1.0;
+            const numHarmonics = 256;
+            const notchFrequency = 0.333;
+            const notchWidth = 1024;
+            const harmonics = [];
+            let i = 0;
+            for (; i < numHarmonics; i++) {
+                const position = i * distance + 1;
+                const level = Math.pow(position, brightness);
+                const bw = (Math.pow(2.0, bandWidth / 1200.0) - 1.0) * Math.pow(position, bandWidthScale);
+                const metalOffset = (Math.sin(i) * metal * i) * (8.0 / numHarmonics);
+                const notchLevel = notchAmount * Math.pow(Math.cos(i * notchFrequency * Math.PI), notchWidth * 2) + (1.0 - notchAmount);
+                harmonics.push({
+                    position: position + metalOffset,
+                    level: level * notchLevel,
+                    bandWidth: bw,
+                    active: true
+                });
+            }
+            return harmonics;
+        };
+        const createWavetables = (() => {
+            const worker = new Worker("./workers/pad.js");
+            const tasks = [];
+            worker.postMessage({
+                action: "init",
+                value: {fftSize: fftSize, sampleRate: context.sampleRate, frequencies: frequencies}
+            });
+            worker.onmessage = event => {
+                if (0 < tasks.length) {
+                    tasks.shift()(event.data);
+                } else {
+                    throw new Error("Got message, but nothing was requested.");
+                }
+            };
+            return (harmonics) => {
+                return new Promise((resolve, ignore) => {
+                    tasks.push(resolve);
+                    worker.postMessage({
+                        action: "update",
+                        value: harmonics
+                    });
+                });
+            }
+        })();
+
+        const canvas = document.querySelector("canvas");
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        const graphics = canvas.getContext("2d");
+
+        let width = canvas.width = canvas.clientWidth;
+        let height = canvas.height = canvas.clientHeight;
+
+        const sources = [];
+        for (let i = 0; i < numBuffers * 2; i++) {
+            const radius = (1.0 - Math.random() * Math.random()) * height * 0.45; // 90%
+            const angle = Math.random() * 2.0 * Math.PI;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            sources.push(new Source(i, x, height * 0.5 + y));
+        }
+
+        const numNodes = 128;
+        const numCircles = 6;
+        const nodes = [];
+        const beziers = [];
+        for (let i = 0; i < numNodes; i++) {
+            const angle = i / numNodes * 2.0 * Math.PI * numCircles;
+            const radius = height * 0.05 + height * 0.45 * Math.random();
+            nodes[i] = {x: -Math.cos(angle) * radius, y: height * 0.5 + Math.sin(angle) * radius};
+        }
+        for (let i = 0; i < nodes.length; i++) {
+            const n0 = nodes[i % nodes.length];
+            const n1 = nodes[(i + 1) % nodes.length];
+            const n2 = nodes[(i + 2) % nodes.length];
+            beziers[i] = {
+                x0: (n0.x + n1.x) * 0.5,
+                y0: (n0.y + n1.y) * 0.5,
+                x1: n1.x,
+                y1: n1.y,
+                x2: (n1.x + n2.x) * 0.5,
+                y2: (n1.y + n2.y) * 0.5
+            };
+        }
+
+        let px = 0.0, py = 0.0, pf = 0 | 0, down = false, loupePhase = 0.0, bezierPhase = 0.0;
+        const render = () => {
+            const auto = document.querySelector("input#auto").checked;
+            if (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight) {
+                width = canvas.width = canvas.clientWidth;
+                height = canvas.height = canvas.clientHeight;
+            } else {
+                graphics.globalCompositeOperation = "destination-out";
+                graphics.fillStyle = "rgba(255, 255, 255, 0.2)";
+                graphics.fillRect(0, 0, width, height);
+            }
+            graphics.globalCompositeOperation = "lighter";
+            graphics.save();
+            graphics.translate(width * 0.5, 0.0);
+            if (auto) {
+                graphics.beginPath();
+                graphics.lineWidth = 2.0;
+                graphics.strokeStyle = "rgb(3, 4, 5)";
+                for (let i = 0; i < beziers.length; i++) {
+                    const bezier = beziers[i];
+                    graphics.moveTo(bezier.x0, bezier.y0);
+                    graphics.quadraticCurveTo(bezier.x1, bezier.y1, bezier.x2, bezier.y2);
+                }
+                graphics.closePath();
+                graphics.stroke();
+                const bezierIndex = bezierPhase * beziers.length;
+                const bezierIndexInt = Math.floor(bezierIndex);
+                const bezier = beziers[bezierIndexInt];
+                const bezierAlpha = bezierIndex - bezierIndexInt;
+                px = quadraticBezier(bezier.x0, bezier.x1, bezier.x2, bezierAlpha);
+                py = quadraticBezier(bezier.y0, bezier.y1, bezier.y2, bezierAlpha);
+                graphics.beginPath();
+                graphics.fillStyle = "white";
+                graphics.arc(px, py, 1.5, 0.0, 2.0 * Math.PI, false);
+                graphics.fill();
+                bezierPhase += 0.00002;
+                bezierPhase -= Math.floor(bezierPhase);
+            }
+            if (preloaded) {
+                if (down || auto) {
+                    if (pf < 120) {
+                        pf++;
+                    }
+                } else {
+                    if (pf > 0) {
+                        pf--;
+                    }
+                }
+            }
+            const pr = Math.pow(pf / 120.0, 2.0) * 100.0;
+            if (down || auto) {
+                graphics.beginPath();
+                graphics.fillStyle = "black";
+                graphics.arc(px, py, pr, 0.0, 2.0 * Math.PI, false);
+                graphics.fill();
+                graphics.beginPath();
+                graphics.strokeStyle = "rgb(40, 229, 255, 0.06)";
+                graphics.arc(px + Math.cos(loupePhase) * 1.8, py + Math.sin(loupePhase) * 1.8, pr, 0.0, 2.0 * Math.PI, false);
+                graphics.stroke();
+                loupePhase += (2.0 * Math.PI) * 0.21;
+            }
+            for (let i = 0; i < sources.length; i++) {
+                const source = sources[i];
+                const dx = source.x - px;
+                const dy = source.y - py;
+                const mg = Math.sqrt(dx * dx + dy * dy);
+                const inside = mg < pr;
+                if (inside) {
+                    const dist = Math.pow((pr - mg) / pr, 2.0);
+                    const nx = dx * (1.0 + dist) / pr;
+                    const ny = dy * (1.0 + dist) / pr;
+                    const cx = px + dx * (1.0 + dist);
+                    const cy = py + dy * (1.0 + dist);
+                    const cr = Math.max(1.2, dist * pr);
+                    graphics.beginPath();
+                    graphics.fillStyle = source.createGradient(graphics, cx, cy, cr);
+                    graphics.arc(cx, cy, cr, 0.0, 2.0 * Math.PI, false);
+                    graphics.fill();
+                    source.update(true, dist, nx, ny);
+                }
+                else {
+                    graphics.beginPath();
+                    graphics.fillStyle = "white";
+                    graphics.arc(source.x, source.y, 0.5, 0.0, 2.0 * Math.PI, false);
+                    graphics.fill();
+                    source.update(false);
+                }
+            }
+            graphics.restore();
+            window.requestAnimationFrame(render);
+        };
+        render();
+
+        let write = 0;
+        Promise.all(params.map(p => createWavetables(createHarmonics.apply(null, p))))
+            .then(results => {
+                for (let j = 0; j < results.length; j++) {
+                    const tables = results[j];
+                    for (let i = 0; i < tables.length; i++) {
+                        buffers[write++].copyToChannel(tables[i], 0, 0);
+                    }
+                }
+            })
+            .then(() => {
+                Promise.all([
+                    readAudio(context, "files/impulse/spaces/Large Wide Echo Hall.ogg"),
+                    context.audioWorklet.addModule("./worklets/LimiterProcessor.js")
+                ]).then(results => {
+                    const convolver = context.createConvolver();
+                    convolver.buffer = results[0];
+                    echo(context, master, convolver, 0.5, 0.3, 1.0);
+                    const limiter = new Limiter(context);
+                    master.connect(limiter);
+                    convolver.connect(limiter);
+                    limiter.connect(context.destination);
+
+                    const updatePointer = event => {
+                        const rect = canvas.getBoundingClientRect();
+                        px = event.clientX - rect.x - rect.width * 0.5;
+                        py = event.clientY - rect.y;
+                    };
+                    mouse(canvas,
+                        event => {
+                            updatePointer(event);
+                            down = true;
+                        },
+                        event => updatePointer(event),
+                        ignore => down = false);
+                });
+                onPreloaded();
+            });
+    </script>
+</head>
+<body>
+<header>
+    <h1>Klangwerk</h1>
+    <h2>Universe</h2>
+</header>
+<article class="center">
+    <canvas style="
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background: url(images/space.jpg) no-repeat;
+    border-radius: 16px;">
+    </canvas>
+    <div style="position: absolute; top: 8px; left: 8px;">
+        <input type="checkbox" id="auto">
+        <label for="auto">Auto</label>
+        <button style="display: none;">Finish</button>
+    </div>
+</article>
+<footer></footer>
+</body>
+</html>

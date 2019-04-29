@@ -1,0 +1,93 @@
+{
+  "name": "javascript-journey",
+  "version": "1.0.0",
+  "description": "Source examples for blog post Journey from procedural to reactive JavaScript with stops",
+  "main": "index.js",
+  "scripts": {
+    "test": "./.git/hooks/pre-commit -f",
+    "commit": "git-issues && commit-wizard",
+    "issues": "git-issues",
+    "lispy": "./node_modules/lispyscript/bin/lispy.js src/03-functional-lispyscript.ls && node src/03-functional-lispyscript.js"
+  },
+  "engines": {
+    "npm": "3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahmutov/javascript-journey.git"
+  },
+  "keywords": [
+    "example",
+    "javascript",
+    "blog",
+    "post"
+  ],
+  "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bahmutov/javascript-journey/issues"
+  },
+  "homepage": "https://github.com/bahmutov/javascript-journey",
+  "private": true,
+  "config": {
+    "pre-git": {
+      "commit-msg": "simple",
+      "pre-commit": [
+        "node src/00-procedural.js",
+        "node src/01-procedural-with-reuse.js",
+        "node src/02-oo.js",
+        "node src/02-oo-plain-prototype-object.js",
+        "node src/02-oo-with-array-methods.js",
+        "node src/03-functional.js",
+        "node src/03-functional-recursive.js",
+        "node src/03-functional-compose.js",
+        "node src/03-functional-with-lodash.js",
+        "node src/03-functional-with-ramda.js",
+        "npm run lispy",
+        "node src/03-point-free.js",
+        "node src/04-lazy.js",
+        "node src/05-promises.js",
+        "node src/06-promises-sequence.js",
+        "node src/07-events.js",
+        "node src/08-events-decoupled.js",
+        "node src/09-step-emitters.js",
+        "node src/10-reactive.js",
+        "node --harmony src/11-generators.js",
+        "node src/12-streams.js",
+        "node src/13-transducers.js",
+        "node src/14-dependency-injection.js",
+        "node src/15-immutable-using-immutable.js",
+        "node src/15-immutable-using-seamless.js",
+        "node src/15-immutable-with-redux.js",
+        "node src/16-async-await.js",
+        "node src/17-asm.js",
+        "node src/18-maybe-monad.js"
+      ],
+      "pre-push": [],
+      "post-commit": [],
+      "post-merge": []
+    }
+  },
+  "devDependencies": {
+    "git-issues": "1.1.0",
+    "pre-git": "3.9.1"
+  },
+  "czConfig": {
+    "path": "node_modules/cz-conventional-changelog"
+  },
+  "dependencies": {
+    "asyncawait": "1.0.1",
+    "data.maybe": "1.2.2",
+    "heroin": "0.5.0",
+    "immutable": "3.7.5",
+    "lazy.js": "0.4.2",
+    "lispyscript": "^1.0.1",
+    "lodash": "3.10.1",
+    "q": "1.4.1",
+    "ramda": "0.18.0",
+    "redux": "3.0.4",
+    "rx": "4.0.6",
+    "seamless-immutable": "4.0.2",
+    "transducers-js": "0.4.174"
+  }
+}

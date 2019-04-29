@@ -1,0 +1,36 @@
+{
+  "name": "observable-value",
+  "version": "0.1.0",
+  "description": "Observable value interface",
+  "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
+  "keywords": [
+    "value",
+    "observable-value",
+    "changeable",
+    "emitter",
+    "change",
+    "object"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/medikoo/observable-value.git"
+  },
+  "dependencies": {
+    "d": "1",
+    "es5-ext": "^0.10.14",
+    "es6-symbol": "^3.1.1",
+    "event-emitter": "^0.3.5",
+    "memoizee": "^0.4.4"
+  },
+  "devDependencies": {
+    "tad": "^0.2.7",
+    "xlint": "^0.2.2",
+    "xlint-jslint-medikoo": "^0.1.4"
+  },
+  "scripts": {
+    "lint": "node node_modules/xlint/bin/xlint --linter=node_modules/xlint-jslint-medikoo/index.js --no-cache --no-stream",
+    "lint-console": "node node_modules/xlint/bin/xlint --linter=node_modules/xlint-jslint-medikoo/index.js --watch",
+    "test": "node ./node_modules/tad/bin/tad"
+  },
+  "license": "MIT"
+}

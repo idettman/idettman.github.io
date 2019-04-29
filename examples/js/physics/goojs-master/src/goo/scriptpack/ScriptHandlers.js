@@ -1,0 +1,2 @@
+require('./ScriptHandler');
+require('./ScriptComponentHandler');
