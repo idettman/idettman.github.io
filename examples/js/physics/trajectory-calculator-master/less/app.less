@@ -1,0 +1,114 @@
+@import "colors";
+@import "toggle";
+
+body {
+	
+	font-family: 'Open Sans';
+	background-color: #EEE;
+	color: #555;
+
+}
+
+h1, h2, h3, p {
+
+	margin-top: 0;
+	font-weight: 100;
+
+}
+
+.content {
+
+	max-width: 1024px;
+	margin: 0 auto;
+	margin-bottom: 400px;
+
+	.model {
+
+		background-color: #FFF;
+		padding: 20px;
+		border-radius: 3px;
+		box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+		margin-top: 20px;
+
+		&.vacuum {
+
+			display: none;
+			
+		}
+
+	}
+
+}
+
+svg {
+
+	width: 448px;
+	display: block;
+	overflow: visible;
+
+}
+
+.variables {
+
+	display: flex;
+	width: 100%;
+	flex-wrap: wrap;
+
+}
+
+.variable {
+
+	display: flex;
+	justify-content: space-between;
+
+	width: 300px;
+
+	margin-right: 50px;
+
+}
+
+.btn {
+
+	border: none;
+	font-size: 12px;
+	font-family: 'Open Sans';
+	text-decoration: none;
+	background-color: #EEE;
+	padding: 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	color: #555;
+	border-radius: 3px;
+	outline: none;
+
+	cursor: pointer;
+
+	transition: all 0.2s ease;
+
+	&:hover {
+
+		background-color: #DDD;
+
+	}
+
+	&:active {
+
+		background-color: #CCC;
+	}
+
+}
+
+.toggle-container {
+
+	display: flex;
+	align-items: center;
+
+	margin-top: 10px;
+
+	*> {
+
+		margin-right: 10px;
+		
+	}
+
+}

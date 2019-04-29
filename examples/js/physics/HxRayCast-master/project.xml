@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="RayCast" package="com.matttuttle.raycast" version="1.0.0" company="" />
+	<app main="raycast.Engine" file="RayCast" path="bin" />
+
+	<window fps="30" background="0x333333" />
+	<window width="640" height="400" resizable="true" unless="mobile" />
+	<window fullscreen="true" if="mobile" />
+	<window vsync="true" antialiasing="0" if="cpp" />
+
+	<source path="src" />
+
+	<haxelib name="openfl" />
+
+	<assets path="assets" include="*.png" type="image" />
+
+	<!-- <icon path="assets/HaxePunk.svg" /> -->
+</project>

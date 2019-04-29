@@ -1,0 +1,74 @@
+.toggle {
+
+	@toggle-height: 25px;
+	@toggle-width: 40px;
+	@margin: 1px;
+	@toggle-animation-speed: all 0.35s;
+	@toggle-animation-speed-ease: @toggle-animation-speed ease;
+	@toggle-animation-speed-cubic: @toggle-animation-speed cubic-bezier(.49,.01,.35,1.28);
+
+	position: relative;
+
+	width: @toggle-width;
+	height: @toggle-height;
+	background-color: #DDD;
+	display: inline-block;
+
+	border-radius: 1000px;
+
+	transition: @toggle-animation-speed;
+
+	.toggle-state {
+
+		position: absolute;
+
+		width: @toggle-height - (@margin * 2);
+		height: @toggle-height - (@margin * 2);
+		background-color: #FFF;
+		box-sizing: border-box;
+		top: @margin;
+		left: @margin;
+
+		box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+
+		border-radius: 1000px;
+
+		transition: @toggle-animation-speed-cubic;
+
+	}
+
+	.toggle-fill {
+
+		position: absolute;
+		top: @margin;
+		left: @margin;
+		border-radius: 1000px;
+
+		background-color:  #EEE;
+		width: @toggle-width - (@margin * 2);
+		height: @toggle-height - (@margin * 2);
+
+		transform-origin: unit((@toggle-width - (@toggle-height / 2)) / @toggle-width * 100, %) 50%;
+
+		transition: @toggle-animation-speed;
+
+	}
+
+	&.checked {
+
+		background-color: rgb(78, 232, 121);
+
+		.toggle-state {
+
+			transform: translate3d(~"calc(@{toggle-width} - @{toggle-height})", 0, 0);
+		}
+
+		.toggle-fill {
+
+			transform: scale3d(0, 0, 0);
+
+		}
+
+	}
+
+}

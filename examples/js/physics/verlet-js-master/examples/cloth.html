@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Verlet Cloth Simulation</title>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen, projection" />
+	<link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="../js/verlet-1.0.0.js"></script>
+</head>
+<body>
+	<script type="text/javascript" src="../site/js/common.js"></script>
+	<div id="header">
+		<h1><a href="../">verlet-js</a> / <em>Cloth</em></h1>
+		<div id="bsa">
+			<script type="text/javascript" src="http://cdn.adpacks.com/adpacks.js?legacyid=1285933&zoneid=1386&key=3df5e2ea1c6a237386fb9d4cdf5b99f0&serve=C6SD52Y&placement=subprotocolcom&circle=dev" id="_adpacks_js"></script>
+		</div>
+		<p>
+			<h4>Author</h4>
+			<a href="http://subprotocol.com/">Sub Protocol</a>
+			
+			<h4>Summary</h4>
+			
+			Lighted translucent cloth simulation. Color and opacity are both controlled by the local-pull of the fabric.
+			<h4>Source Code</h4>
+			<a href="https://github.com/subprotocol/verlet-js/blob/master/examples/cloth.html">View on GitHub</a>
+		</p>
+	</div>
+	<canvas id="scratch" style="width: 800px; height: 500px; background: #000;"></canvas>
+	<script type="text/javascript">
+
+	function lerp(a, b, p) {
+		return (b-a)*p + a;
+	}
+	
+	window.onload = function() {
+		var canvas = document.getElementById("scratch");
+
+		// canvas dimensions
+		var width = parseInt(canvas.style.width);
+		var height = parseInt(canvas.style.height);
+
+		// retina
+		var dpr = window.devicePixelRatio || 1;
+		canvas.width = width*dpr;
+		canvas.height = height*dpr;
+		canvas.getContext("2d").scale(dpr, dpr);
+
+		// simulation
+		var sim = new VerletJS(width, height, canvas);
+		sim.friction = 1;
+		sim.highlightColor = "#fff";
+		
+		// entities
+		var min = Math.min(width,height)*0.5;
+		var segments = 20;
+		var cloth = sim.cloth(new Vec2(width/2,height/3), min, min, segments, 6, 0.9);
+		
+		cloth.drawConstraints = function(ctx, composite) {
+			var stride = min/segments;
+			var x,y;
+			for (y=1;y<segments;++y) {
+				for (x=1;x<segments;++x) {
+					ctx.beginPath();
+
+					var i1 = (y-1)*segments+x-1;
+					var i2 = (y)*segments+x;
+					
+					ctx.moveTo(cloth.particles[i1].pos.x, cloth.particles[i1].pos.y);
+					ctx.lineTo(cloth.particles[i1+1].pos.x, cloth.particles[i1+1].pos.y);
+					
+					ctx.lineTo(cloth.particles[i2].pos.x, cloth.particles[i2].pos.y);
+					ctx.lineTo(cloth.particles[i2-1].pos.x, cloth.particles[i2-1].pos.y);
+					
+					var off = cloth.particles[i2].pos.x - cloth.particles[i1].pos.x;
+					off += cloth.particles[i2].pos.y - cloth.particles[i1].pos.y;
+					off *= 0.25;
+					
+					var coef = Math.round((Math.abs(off)/stride)*255);
+					if (coef > 255)
+						coef = 255;
+					
+					ctx.fillStyle = "rgba(" + coef + ",0," + (255-coef)+ "," +lerp(0.25,1,coef/255.0)+")";
+					
+					ctx.fill();
+				}
+			}
+			
+			var c;
+			for (c in composite.constraints) {
+				if (composite.constraints[c] instanceof PinConstraint) {
+					var point = composite.constraints[c];
+					ctx.beginPath();
+					ctx.arc(point.pos.x, point.pos.y, 1.2, 0, 2*Math.PI);
+					ctx.fillStyle = "rgba(255,255,255,1)";
+					ctx.fill();
+				}
+			}
+		}
+		
+		cloth.drawParticles = function(ctx, composite) {
+			// do nothing for particles
+		}
+		
+		// animation loop
+		var legIndex = 0;
+		var loop = function() {
+			sim.frame(16);
+			sim.draw();
+			requestAnimFrame(loop);
+		};
+
+		loop();
+	};
+	
+	
+	</script>
+	<div id="footer">
+		Copyright 2013 Sub Protocol and other contributors.
+		<br/><a href="http://subprotocol.com/">http://subprotocol.com/</a>
+	</div>
+</body>

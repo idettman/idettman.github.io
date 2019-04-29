@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="content-language" content="fi">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <title>Jukka Kari - lentorata</title>
+  </head>
+  <body onkeydown="keys(event, 'down')"onkeyup="keys(event, 'up')" onmousemove="getMouseCoords(event)" onmousedown="mousedown()" onmouseup="mouseup()" id="body"  >
+    <div id="div_id">
+      <div id="div_canvas">
+        <canvas id="canvas_id";></canvas>
+      </div>
+      <div id="div_right">
+        <form action="demo_form.asp">
+          <p id="id_speed"> Lähtönopeus: </p>0<input id="id_speedSlider" value="715" type="range" min="0" max="2000" onchange="speedSlide()">2000
+          <p id="id_tiheys"> Ilmantiheys: </p>0<input id="id_tiheysSlider" value="1293" type="range" min="0" max="10000" onchange="tiheysSlide()">10
+          <p id="id_caliber"> kaliiperi: </p>0<input id="id_caliberSlider" value="762" type="range" min="0" max="5000" onchange="caliberSlide()">50mm
+          <p id="id_mass"> massa: </p>0<input id="id_massSlider" value="800" type="range" min="10" max="500000" onchange="massSlide()">5000g
+          <p id="id_gravity"> painovoima: </p>0<input id="id_gravitySlider" value="981" type="range" min="0" max="10000" onchange="bulletGravitySlide()">100
+          <p id="id_muoto"> muotokerroin: </p>0<input id="id_muotoSlider" value="295" type="range" min="0" max="2500" onchange="muotokerroinSlide()">2.5
+        </form>
+        </br>
+        <p style="font-weight:bold; color:#fff">Nappuloista voi säätää tarkemmin</br>
+        <button onclick="speedButton()">Nopeus</button></br>
+        <button onclick="tiheysButton()">Ilmantiheys</button></br>
+        <button onclick="caliberButton()">Kaliiperi</button></br> 
+        <button onclick="massButton()">Massa</button></br>     
+        <button onclick="gravityButton()">Painovoima</button></br>
+        <button onclick="muotoButton()">muotokerroin</button></br>
+        <button onclick="sijaintix(1)">x++</button>
+        <button onclick="sijaintiy(-1)">y++</button></br>
+        <button onclick="sijaintix(-1)">x--</button>
+        <button onclick="sijaintiy(1)">y--</button>
+      </div>
+      <div id="div_ala">
+        <p style="font-weight:bold; color:#fff">Ammu painamalla R nappulaa
+        <button onclick="luotiSeuraus();">Seuraa luotia off/on</button> 
+      </div>
+    </div>
+    <script src="js/collisions.js"></script>
+    <script src="js/gameui.js"></script>
+    <script src="js/map1.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/sprites.js"></script>
+    <script src="js/menu.js"></script> 
+    <script src="js/weapons.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/gamecode.js"></script>
+  </body>
+</html>
+

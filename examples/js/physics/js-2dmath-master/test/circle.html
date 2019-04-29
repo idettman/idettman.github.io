@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" ></script>
+<title>js-2dmath: Circles</title>
+
+<script src="../dist/js-2dmath-browser.min.js" type="text/javascript" ></script>
+<!--
+<script src="../debug/js-2dmath-browser-debug.js" type="text/javascript" ></script>
+-->
+
+</head>
+<body>
+<h1>js-2dmath: circle test</h1>
+<canvas id="canvas" width="640" height="480" style="border: 1px solid red;"></canvas>
+</body>
+</html>
+
+<script>
+//
+// --- INIT ---
+//
+//expose js-2dmath globally, I'm lazy!
+require("js-2dmath").globalize(window);
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+Draw.invertAxis(canvas, ctx); // y-up
+ctx.translate(canvas.width * 0.5, canvas.height * 0.5); // center
+Draw.cartesianAxis(ctx, 320, 16); // coordinates
+
+//
+// --- CODE ---
+//
+
+var circle = Circle.create(0, 0, 35);
+
+
+var rect = Rectangle.create(100, 100, 150, 150);
+var circle2 = Circle.fromRectangle(rect);
+var circle3 = Circle.fromRectangle(rect, true);
+/*
+console.log(circle);
+console.log(rect);
+console.log(circle2);
+*/
+Draw.text(ctx, "fromRectangle(*, true|false)", [40, 160]);
+Draw.circle(ctx, circle);
+Draw.rectangle(ctx, rect, "blue");
+Draw.circle(ctx, circle2, "purple");
+Draw.circle(ctx, circle3, "red");
+
+Draw.text(ctx, "fromTriangle(*, true|false, true|false)", [-280, 160]);
+var tri = Triangle.create(-150, 100, -200, 150, -250, 100);
+var circle4 = Circle.fromTriangle(tri, false, false);
+var circle5 = Circle.fromTriangle(tri, false, true);
+
+var circle6 = Circle.fromTriangle(tri, true, false);
+var circle7 = Circle.fromTriangle(tri, true, true);
+
+Draw.triangle(ctx, tri);
+Draw.circle(ctx, circle4, "blue");
+Draw.circle(ctx, circle5, "red");
+
+Draw.circle(ctx, circle6, "yellow");
+Draw.circle(ctx, circle7, "purple");
+
+
+
+Draw.text(ctx, "fromSegment2(*)", [40, -40]);
+var seg2 = Segment2.create(75, -50, 100, -125);
+var circle8 = Circle.fromSegment2(seg2);
+
+console.log(seg2);
+console.log(circle8);
+
+Draw.segment2(ctx, seg2, "blue");
+Draw.circle(ctx, circle8, "red");
+
+</script>

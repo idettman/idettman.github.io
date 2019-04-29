@@ -1,0 +1,219 @@
+@import 'bourbon/bourbon';
+@import 'shared';
+@import 'prettify';
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: $font-size;
+  line-height: $line-height;
+  font-family: 'Open Sans', Lucida, sans-serif;
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.75);
+  color: $font-color;
+  background: $background;
+  &.marbles {
+    background: #000;
+    canvas {
+      cursor: none;
+    }
+  }
+}
+
+a {
+  &:link,
+  &:visited {
+    color: $font-color;
+  }
+  &:hover,
+  &:active {
+    text-decoration: none;
+  }
+}
+
+#content, #toc {
+
+   section {
+
+    margin-bottom: $line-height;
+    &:after {
+      position: relative;
+      display: block;
+      content: "";
+      height: 0;
+      width: 100%;
+      margin: $line-height 0 $line-height -$line-height;
+      padding: 0;
+      border-bottom: 1px solid $highlight;
+    }
+
+    p {
+      margin-bottom: $line-height;
+    }
+
+  }
+
+  ul, ol, & {
+    list-style: none;
+    li {
+      &:not(:last-child) {
+        margin-bottom: $line-height;
+      }
+    }
+    ol {
+      list-style: decimal;
+      // list-style-position: inside;
+      li {
+        margin-left: $line-height;
+        width: 75%;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  dd {
+    margin-bottom: $line-height;
+  }
+
+  #documentation {
+    dt {
+      font-weight: bold;
+    }
+  }
+
+  code,
+  pre {
+    font-family: 'Lekton', monospace;
+  }
+
+  pre {
+    padding: 0 $line-height;
+    background: rgba(255, 255, 255, 0.3);
+    width: 600 - $line-height * 3;
+  }
+
+}
+
+#toc {
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: 1px solid $highlight;
+
+  & > ul {
+    width: 185px - $line-height * 3;
+    padding: $line-height * 2 $line-height;
+  }
+
+  li ul {
+
+    margin: $line-height / 2 0;
+    padding: 0 0 0 $line-height / 2;
+
+    li {
+      margin-bottom: 0 !important;
+    }
+
+  }
+
+}
+
+div.live-demo {
+
+  position: relative;
+  border: 1px solid white;
+  @include user-select(none);
+  cursor: pointer;
+
+  &:after {
+     position: absolute;
+     top: 0;
+     left: 0;
+     margin: $line-height / 2;
+     background: rgba(255, 255, 255, 0.75);
+     padding: 4px 6px;
+     @include border-radius(3px);
+     opacity: 0.5;
+     content: "Play";
+  }
+
+  &:hover:after {
+    opacity: 1.0;
+  }
+
+  &.playing:after {
+    content: "Pause";
+  }
+
+}
+
+#content {
+  position: absolute;
+  top: 0;
+  left: 185px;
+  width: 600px;
+  padding: $line-height * 2 0;
+  border-left: 1px solid $highlight;
+  & > * {
+    padding-left: $line-height;
+  }
+  p.method, p.property, p.constructor, p.example {
+    margin-bottom: 0;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: $line-height;
+}
+
+h1 {
+  font-size: $font-size * 3;
+  line-height: $line-height * 3;
+}
+
+h2 {
+  font-size: 20px;
+  line-height: 2 * $line-height;
+  text-transform: capitalize;
+}
+
+canvas,
+svg {
+  display: block;
+  margin: 0 auto;
+  cursor: pointer;
+
+  path {
+    opacity: 0.9;
+  }
+  path:hover,
+  path.fixed {
+    stroke: rgb(255, 160, 0);
+  }
+
+}
+
+#legend {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  border-right: 1px solid white;
+  border-top: 1px solid white;
+  border-left: 1px solid white;
+  padding: $line-height $line-height * 2;
+  background: $background;
+  @include box-shadow(0 0 10px rgba(0,0,0,0.125));
+  margin-left: -162px;
+}
+
+::selection,
+::-moz-selection,
+::-webkit-selection {
+  background: rgba(255, 160, 0, 0.66);
+}

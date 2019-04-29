@@ -1,0 +1,327 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Physics: String</title>
+    <link rel="stylesheet" type="text/css" href="../styles/style.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="../build/physics.min.js"></script>
+  </head>
+  <body>
+    <svg id="splash" width="800" height="600"></svg>
+    <div id="legend">
+      This simulation is built with <a href="http://jonobr1.github.com/Physics">Physics</a>.
+    </div>
+    <script type="text/javascript">
+
+      /**
+       * Strand is a class that holds all the rendering logic for drawing
+       * a curved SVG based on three x, y points.
+       * @class
+       */
+      var Strand = function(physics, x1, y1, x2, y2) {
+
+        // Reference to the physics the Strand is in.
+        this.physics = physics;
+        // Commands make up the set draw calls for rendering SVG Paths.
+        this.commands = [];
+        // Describes whether the Strand is fixed.
+        this.fixed = false;
+
+        // Physics.Springs related variables.
+        this.mass = 0.2;
+        this.strength = 0.7;
+        this.drag = Physics.DEFAULT_DRAG;
+        this.restLength = 0;
+
+        // The first end-point of the line.
+        this.a = physics.makeParticle(this.mass, x1, y1);
+        // The second end-point of the line.
+        this.b = physics.makeParticle(this.mass, x2, y2);
+        // The rendered vibrated point.
+        this.vibrato = physics.makeParticle(this.mass, 0, 0);
+        // The desired end point where the vibrated point should settle to.
+        this.anchor = physics.makeParticle(this.mass, 0, 0);
+
+        // These particles disregard any Physics that is simulated.
+        this.a.makeFixed();
+        this.b.makeFixed();
+        this.anchor.makeFixed();
+
+        // Set the vibrato and anchor to the same point, the midpoint of the
+        // Strand's line segment.
+        this.vibrato.position.set(
+          (this.b.position.x - this.a.position.x) / 2 + this.a.position.x,
+          (this.b.position.y - this.a.position.y) / 2 + this.a.position.y
+        );
+        this.anchor.position.copy(this.vibrato.position);
+
+        // Create the spring between the vibrato and the anchor.
+        // This makes it the animation look and feel the way we want.
+        physics.makeSpring(this.anchor, this.vibrato, this.strength, this.drag, this.restLength);
+
+        // Create the actual svg element that will be added to the webpage.
+        this.domElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        this.setAttributes({
+          'stroke': '#333',
+          'stroke-linecap': 'round',
+          'stroke-linejoin': 'round',
+          'fill': 'none',
+          'stroke-width': 10
+        });
+
+        this.update().render();
+
+      };
+
+      Strand.prototype = {
+
+        /**
+         * Add a Strand to an SVG.
+         */
+        appendTo: function(svg) {
+
+          svg.appendChild(this.domElement);
+          return this;
+
+        },
+
+        /**
+         * Set the position of the anchor on the line between a, b.
+         * Assumes a horizontal line.
+         */
+        setAnchor: function(v) {
+
+          this.anchor.position.set(v.x, this.anchor.position.y);
+          this.vibrato.makeFixed();
+          this.affix(v);
+          return this;
+
+        },
+
+        /**
+         * Make the vibrato fixed on argument v.
+         */
+        affix: function(v) {
+
+          this.fixed = true;
+          this.vibrato.position.copy(v);
+          this.domElement.setAttribute('class', 'fixed');
+          return this;
+
+        },
+
+        /**
+         * Release the vibrato's fixed state and simulate "boing".
+         */
+        release: function() {
+
+          this.vibrato.fixed = false;
+          this.fixed = false;
+          this.domElement.setAttribute('class', '');
+          return this;
+
+        },
+
+        /**
+         * Convenience method to set many attributes of an svg
+         * in a single object.
+         */
+        setAttributes: function(attrs) {
+
+          for (var k in attrs) {
+            var v = attrs[k];
+            this.domElement.setAttribute(k, v);
+          }
+
+          return this;
+
+        },
+
+        /**
+         * Calculates the draw calls to be rendered by the svg element.
+         */
+        update: function() {
+
+          // Calculate cubic bezier curve
+          // http://www.w3.org/TR/SVG/paths.html#PathDataCubicBezierCommands
+
+          var dx = 0, dy = 0, d1 = 0, t1 = 0, d2 = 0, t2 = 0, t3 = 0;
+          var x1 = x2 = this.vibrato.position.x;
+          var y1 = y2 = this.vibrato.position.y;
+
+          // Only curve the point if the Strand isn't fixed, i.e: in a state
+          // Stuck to some other position.
+          if (!this.fixed) {
+
+            // First calculate the angle between a, vibrato and b, vibrato.
+
+            dx = this.a.position.x - this.vibrato.position.x;
+            dy = this.a.position.y - this.vibrato.position.y;
+
+            d1 = Math.sqrt(dx * dx + dy * dy) / 2;
+            t1 = Math.atan2(dy, dx);
+
+            dx = this.b.position.x - this.vibrato.position.x;
+            dy = this.b.position.y - this.vibrato.position.y;
+
+            d2 = Math.sqrt(dx * dx + dy * dy) / 2;
+            t2 = Math.atan2(dy, dx);
+
+            // What's the difference?
+
+            t3 = t1 + t2;
+            t4 = - Math.PI + t1 + t2;
+
+            // Then project anchors out from vibrato position
+
+            x1 = d1 * Math.cos(t3) + this.vibrato.position.x;
+            y1 = d1 * Math.sin(t3) + this.vibrato.position.y;
+
+            x2 = d2 * Math.cos(t4) + this.vibrato.position.x;
+            y2 = d2 * Math.sin(t4) + this.vibrato.position.y;
+
+            // This gives us our curve anchor points.
+
+          }
+
+          // construct commands
+
+          this.commands[0] = 'M ' + this.a.position.x + ' ' + this.a.position.y;
+          this.commands[1] = 'C ' + this.a.position.x + ' ' + this.a.position.y + ' ' + x1 + ' ' + y1 + ' ' + this.vibrato.position.x + ' ' + this.vibrato.position.y;
+          this.commands[2] = 'C ' + x2 + ' ' + y2 + ' ' + this.b.position.x + ' ' + this.b.position.y + ' ' + this.b.position.x + ' ' + this.b.position.y;
+          this.commands[3] = 'L ' + this.b.position.x + ' ' + this.b.position.y;
+
+          return this;
+
+        },
+
+        /**
+         * Render commands to the SVG to be displayed to the user.
+         */
+        render: function() {
+
+          // construct the d attribute
+          // http://www.w3.org/TR/SVG/paths.html#PathData
+          this.setAttributes({
+            d: this.commands.join(' ')
+          });
+
+          return this;
+
+        }
+
+      };
+
+      $(function() {
+
+        // Amount of strands
+        var amount = 10;
+        // the container
+        var $svg = $('#splash');
+        var svg = $svg[0];
+        // Mouse and positioning related variables
+        var offset, mouse = new Physics.Vector();
+
+        var physics = new Physics();
+
+        // The dimensions of the svg
+        var width = svg.width.baseVal.value;
+        var height = svg.height.baseVal.value;
+
+        // Create strands.
+        var strings = [];
+
+        for (var i = 0; i < amount; i++) {
+
+          var pct = (i + 1) / (amount + 1);
+          var h = pct * height;
+
+          var string = new Strand(physics, width * 0.1, h, width * 0.9, h);
+          string.appendTo(svg); // Add to "scene"
+          strings.push(string);
+
+        }
+
+        // Create a mousedown event for each SVG. Hit states are a great
+        // advantage to SVG rendering.
+        $.each(strings, function(i, string) {
+
+          $(string.domElement)
+            .bind('mousedown', function(e) {
+              string.setAnchor(mouse);
+            });
+
+        });
+
+        // Window events help navigate interaction and mouse related variables.
+        $(window)
+          .bind('mousemove', function(e) {
+
+            // update mouse
+            mouse.x = e.pageX;
+            mouse.y = e.pageY;
+
+            // Make sure mouse is relative to SVG's position,
+            // not applicable for firefox for some reason, buh?
+            if (!$.browser.mozilla) {
+              mouse.x += document.body.scrollLeft - offset.left;
+              mouse.y += document.body.scrollTop - offset.top;
+            }
+
+            // IF any string is fixed, set it to the mouse's position.
+            $.each(strings, function(i, string) {
+              if (string.fixed) {
+                string.affix(mouse);
+              }
+            });
+
+          })
+          .bind('resize', function(e) {
+
+            // Make sure we update the offset position. Should only
+            // happen on resize.
+            offset = $svg.offset();
+
+          })
+          .bind('mouseup', function(e) {
+
+            // Release all fixed strings.
+            $.each(strings, function(i, string) {
+              if (string.fixed) {
+                string.release();
+              }
+            });
+
+          })
+          .trigger('resize');
+
+          // Draw strings and start physics simulation.
+          physics.onUpdate(function() {
+
+            $.each(strings, function(i, string) {
+              string.update().render();
+            });
+
+          }).play();
+
+      });
+
+    </script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-35459584-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+  </body>
+</html>
