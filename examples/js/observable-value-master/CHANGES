@@ -1,0 +1,26 @@
+v0.1.0  --  2017.03.17
+* Update dependencies
+
+v0.0.5  --  2015.10.15
+* Use Symbol.for to create unique observable symbol
+
+v0.0.4  --  2015.10.15
+* Fix and/or resolution of current values
+* Update dependencies
+
+v0.0.3  --  2015.06.23
+* Add:
+  * subtract
+  * eqSloppy
+* Support function resolvers in 'if'
+* Expose observable on event.target
+* Fix spelling of LICENSE
+* Configure lint scripts
+
+v0.0.2  --  2014.05.08
+* Expose all functions as methods on ObsevableValue.prototype
+* Introduce reactive `add`
+* Rely on SameValueZero equality
+
+v0.0.1  --  2014.04.28
+Initial (improved version of previously published `mutable` package)

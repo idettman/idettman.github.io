@@ -1,0 +1,1 @@
+export default "C'est la réponse D ! (folder special rule)"

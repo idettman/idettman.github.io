@@ -1,0 +1,9 @@
+{
+  "name": "codeflow-verlet-impulse-preservation",
+  "description": "verlet physics with impulse preservation",
+  "author": "Isaac A. Dettman <idettman@gmail.com>",
+  "main": "index.js",
+  "license": "ISC",
+  "version": "1.0.0",
+  "dependencies": {}
+}
