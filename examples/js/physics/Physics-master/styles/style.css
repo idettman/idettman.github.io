@@ -1,0 +1,229 @@
+/**
+ * Styling the index page requires bourbon
+ * http://thoughtbot.com/bourbon/
+ */
+/**
+ * Styling the index page requires bourbon
+ * http://thoughtbot.com/bourbon/
+ */
+code, pre {
+  font-family: 'lekton', monospace; }
+
+pre {
+  font-size: 14px;
+  color: black;
+  margin: 24px 0;
+  display: block;
+  background-color: #dedede; }
+
+pre .nocode {
+  background-color: none;
+  color: #000; }
+
+pre .str {
+  color: #0a6450; }
+
+pre .kwd {
+  color: #480d7f; }
+
+pre .com {
+  color: #3f3f3f;
+  font-style: italic; }
+
+pre .typ {
+  color: #0a6450; }
+
+pre .lit {
+  color: #0e648c; }
+
+pre .pun {
+  color: black; }
+
+pre .pln {
+  color: black; }
+
+pre .tag {
+  color: #0a6450; }
+
+pre .atn {
+  color: #480d7f; }
+
+pre .atv {
+  color: #00ffc8; }
+
+pre .dec {
+  color: #00ffc8; }
+
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums {
+  margin: 0;
+  color: #b3b3b3; }
+
+li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9 {
+  list-style-type: decimal;
+  padding: 0 7px;
+  width: 560px;
+  border-right: 1px solid #efefef;
+  background-color: #e3e3e3;
+  overflow: visible; }
+
+/* Alternate shading for lines */
+li.L1, li.L3, li.L5, li.L7, li.L9 {
+  background: #e5e5e5; }
+
+* {
+  margin: 0;
+  padding: 0; }
+
+body {
+  font-size: 14px;
+  line-height: 20px;
+  font-family: 'Open Sans', Lucida, sans-serif;
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.75);
+  color: #333333;
+  background: #e2dddb; }
+  body.marbles {
+    background: #000; }
+    body.marbles canvas {
+      cursor: none; }
+
+a:link, a:visited {
+  color: #333333; }
+a:hover, a:active {
+  text-decoration: none; }
+
+#content section, #toc section {
+  margin-bottom: 20px; }
+  #content section:after, #toc section:after {
+    position: relative;
+    display: block;
+    content: "";
+    height: 0;
+    width: 100%;
+    margin: 20px 0 0px;
+    padding: 0;
+    border-bottom: 1px solid white; }
+  #content section p, #toc section p {
+    margin-bottom: 20px; }
+#content ul, #content ol, #content, #toc ul, #toc ol, #toc {
+  list-style: none; }
+  #content ul li:not(:last-child), #content ol li:not(:last-child), #content li:not(:last-child), #toc ul li:not(:last-child), #toc ol li:not(:last-child), #toc li:not(:last-child) {
+    margin-bottom: 20px; }
+  #content ul ol, #content ol ol, #content ol, #toc ul ol, #toc ol ol, #toc ol {
+    list-style: decimal; }
+    #content ul ol li, #content ol ol li, #content ol li, #toc ul ol li, #toc ol ol li, #toc ol li {
+      margin-left: 20px;
+      width: 75%;
+      margin-bottom: 0; }
+#content dd, #toc dd {
+  margin-bottom: 20px; }
+#content #documentation dt, #toc #documentation dt {
+  font-weight: bold; }
+#content code,
+#content pre, #toc code, #toc pre {
+  font-family: 'Lekton', monospace; }
+#content pre, #toc pre {
+  padding: 0 20px;
+  background: rgba(255, 255, 255, 0.3);
+  width: 540px; }
+
+#toc {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: 1px solid white; }
+  #toc > ul {
+    width: 125px;
+    padding: 40px 20px; }
+  #toc li ul {
+    margin: 10px 0;
+    padding: 0 0 0 10px; }
+    #toc li ul li {
+      margin-bottom: 0 !important; }
+
+div.live-demo {
+  position: relative;
+  border: 1px solid white;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer; }
+  div.live-demo:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 10px;
+    background: rgba(255, 255, 255, 0.75);
+    padding: 4px 6px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    border-radius: 3px;
+    opacity: 0.5;
+    content: "Play"; }
+  div.live-demo:hover:after {
+    opacity: 1.0; }
+  div.live-demo.playing:after {
+    content: "Pause"; }
+
+#content {
+  position: absolute;
+  top: 0;
+  left: 185px;
+  width: 600px;
+  padding: 40px 0;
+  border-left: 1px solid white; }
+  #content > * {
+    padding-left: 20px; }
+  #content p.method, #content p.property, #content p.constructor, #content p.example {
+    margin-bottom: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 20px; }
+
+h1 {
+  font-size: 42px;
+  line-height: 60px; }
+
+h2 {
+  font-size: 20px;
+  line-height: 40px;
+  text-transform: capitalize; }
+
+canvas,
+svg {
+  display: block;
+  margin: 0 auto;
+  cursor: pointer; }
+  canvas path,
+  svg path {
+    opacity: 0.9; }
+  canvas path:hover,
+  canvas path.fixed,
+  svg path:hover,
+  svg path.fixed {
+    stroke: #ffa000; }
+
+#legend {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  border-right: 1px solid white;
+  border-top: 1px solid white;
+  border-left: 1px solid white;
+  padding: 20px 40px;
+  background: #e2dddb;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
+  margin-left: -162px; }
+
+::selection,
+::-moz-selection,
+::-webkit-selection {
+  background: rgba(255, 160, 0, 0.66); }

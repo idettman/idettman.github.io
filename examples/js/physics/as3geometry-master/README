@@ -1,0 +1,7 @@
+AS3 Geometry is a place for me to place my geometry classes. Over the years I've created innumerable geometry implementations, and I am looking to create a definitive collection.
+
+Principles:
+
+# Types of objects are defined by interfaces
+# Objects have at least one implementation which is immutable; the defining data are unchangable after construction.
+# Objecst may have another implementation which is mutable. Mutable objects require an AS3GeometryContext injection. The context helps manage the invalidation of elements and their redrawing. This tweak removes the problem of updates happening on different frames.

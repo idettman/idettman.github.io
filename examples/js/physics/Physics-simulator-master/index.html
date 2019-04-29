@@ -1,0 +1,104 @@
+<!doctype html>
+
+<html lang="en"
+      ng-app="physicsSimulator">
+<head>
+	<title>Физический симулятор</title>
+	<meta charset="utf-8">
+	<meta name="description" content="Физический симулятор">
+	<meta name="author" content="A.Shelyugov">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+	<link rel="stylesheet" href="css/page.css">
+</head>
+
+<body>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/angular.min.js"></script>
+	<script src="scripts/raphael.min.js"></script>
+
+	<script src="scripts/physics-engine.js"></script>
+	<script src="scripts/physics-model.js"></script>
+	<script src="scripts/physics-view.js"></script>
+	<script src="scripts/physics-controller.js"></script>
+
+	<div class="container-fluid fill-height"
+	     ng-controller="InitializerController">
+	<div class="row">
+	<div id="mainCanvas"
+	     class="container-fluid col-md fill-height content">
+	</div>
+	<div class="col-sm-auto">
+		<form>
+		<div class="form-group row">
+			<label for="inputG"
+			       class="col-form-label">g</label>
+			<div class="col">
+				<input id="inputG"
+				       type="number"
+				       step="0.01"
+				       class="form-control"
+				       ng-model="envProps.gCoefficient"
+				       />
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="inputStartingSpeed"
+			       class="col-form-label">V</label>
+			<div class="col">
+				<input id="inputStartingSpeed"
+				       type="number"
+				       class="form-control"
+				       ng-model="envProps.initialSpeed"/>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="inputMass"
+			       class="col-form-label">m</label>
+			<div class="col">
+				<input id="inputMass"
+				       type="number"
+				       step="0.01"
+				       class="form-control"
+				       ng-model="envProps.mass"/>
+			</div>
+		</div>
+
+		<div class="form-check row">
+			<label class="form-check-label">
+				<input id="inputNeedToTrace"
+				       type="checkbox"
+                                       class="form-check-input"
+                                       ng-model="envProps.needToTrace"/>
+				Трассировка
+			</label>
+		</div>
+		</form>
+		<button type="button"
+			class="btn"
+			ng-click="runSimulation(envProps, simulationSummary)">
+			Выполнить
+		</button>
+		<div class="table-responsive table-container">
+			<table class="table table-stripped table-hover">
+				<thead>
+					<tr>
+						<th>X</th>
+						<th>Y</th>
+						<th>VX</th>
+						<th>VY</th>
+				</tr>
+				</thead>
+				<tr ng-repeat="state in simulationSummary.states">
+					<td>{{state.objects[0].x | number : 2}}</td>
+					<td>{{state.objects[0].y | number : 2}}</td>
+					<td>{{state.objects[0].v.x | number : 2}}</td>
+					<td>{{state.objects[0].v.y | number : 2}}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	</div>
+	</div>
+</body>
+</html>

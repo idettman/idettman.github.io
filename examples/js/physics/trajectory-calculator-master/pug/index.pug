@@ -1,0 +1,100 @@
+doctype html
+
+html
+	head
+	meta(charset='utf-8')
+	meta(name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0")
+	title
+	link(href='/static/css/app.css' rel='stylesheet' type='text/css')
+	link(href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i&amp;subset=greek,latin-ext" rel="stylesheet")
+
+body(ontouchstart)
+	.content
+		h1 Discus trajectory calculator
+
+		.toggle-container
+			.toggle(toggleFeature='changeGraphWidth').checked
+				.toggle-fill
+				.toggle-state
+			label.toggle-label Full width graph
+
+		.toggle-container
+			.toggle(toggleFeature='animateGraphs').checked
+				.toggle-fill
+				.toggle-state
+			label.toggle-label Animate
+
+		section.vacuum.model
+			h2 Perfect vacuum
+			svg(id='vacuum-model-svg' model='vacuum')
+
+			.variables
+				.variable
+					label v#[sub release]
+					input(id='vacuum-v0' model='vacuum' placeholder='23.6 m/s')
+				.variable
+					label &theta;#[sub release]
+					input(id='vacuum-thetaRelease0' model='vacuum' placeholder="35°")
+				.variable
+					label g
+					input(id='vacuum-g' model='vacuum' placeholder="9.81 m/s²")
+				.variable
+					label release height
+					input(id='vacuum-y0' model='vacuum' placeholder="1.492 m")
+				.variable
+					label &Delta;t
+					input(id='vacuum-deltaT' model='vacuum' placeholder="0.01 s")
+
+			button(id='vacuum-calculate').btn Calculate
+			a(id='vacuum-save' href='' target='_blank').btn Save
+
+		section.air-resistance.model
+			h2 Air resistance
+			svg(id='air-resistance-model-svg' model='air-resistance')
+
+			.variables
+				.variable
+					label v#[sub release]
+					input(id='air-resistance-v0' model='air-resistance' placeholder="23.6 m/s")
+				.variable
+					label &theta;#[sub release]
+					input(id='air-resistance-thetaRelease0' model='air-resistance' placeholder="35°")
+				.variable
+					label &theta;#[sub release]
+					input(type='range' id='air-resistance-thetaRelease0-range' min='0' max='90' step='0.5' model='air-resistance')
+				.variable
+					label &theta;#[sub attack]
+					input(id='air-resistance-thetaAttack0' model='air-resistance' placeholder="0°")
+				.variable
+					label &theta;#[sub attack]
+					input(type='range' id='air-resistance-thetaAttack0-range' min='-90' max='90' step='0.5' model='air-resistance')
+				.variable
+					label v#[sub wind]
+					input(id='air-resistance-vWind' model='air-resistance' placeholder="0 m/s")
+				.variable
+					label g
+					input(id='air-resistance-g' model='air-resistance' placeholder="9.81 m/s²")
+				.variable
+					label release height
+					input(id='air-resistance-y0' model='air-resistance' placeholder="1.492 m")
+				.variable
+					label &Delta;t
+					input(id='air-resistance-deltaT' model='air-resistance' placeholder="0.01 s")
+				.variable
+					label &rho;
+					input(id='air-resistance-rho' model='air-resistance' placeholder="1.225")
+				.variable
+					label Mass
+					input(id='air-resistance-m' model='air-resistance' placeholder="2 kg")
+				.variable
+					label Discus diameter
+					input(id='air-resistance-discusD' model='air-resistance' placeholder="0.220 m")
+				.variable
+					label Discus height
+					input(id='air-resistance-discusH' model='air-resistance' placeholder="0.045 m")
+
+			button(id='air-resistance-calculate').btn Calculate
+			a(id='air-resistance-save' href='' target='_blank' download).btn Save
+
+	script(src='static/js/vendor.js')
+	script(src='static/js/app.js')

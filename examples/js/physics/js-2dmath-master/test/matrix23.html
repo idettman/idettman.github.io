@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" ></script>
+<title>js-2dmath: Interpolate Matrix23 using Transitions (linear)</title>
+
+<script src="../dist/js-2dmath-browser.min.js" type="text/javascript" ></script>
+<!--
+<script src="../debug/js-2dmath-browser-debug.js" type="text/javascript" ></script>
+-->
+
+</head>
+<body>
+<h1>js-2dmath: Interpolate Matrix23 using Transitions (linear)</h1>
+<canvas id="canvas" width="640" height="480" style="border: 1px solid red;"></canvas>
+<ul>
+    <li>Red: initial position</li>
+    <li>Blue: target position</li>
+    <li>purple: transformation matrix applied to canvas</li>
+    <li>green: rectangle to polygon applied matrix to polygon</li>
+</body>
+</html>
+
+<script>
+var ctx = document.getElementById("canvas").getContext("2d");
+
+require("js-2dmath").globalize(window);
+
+
+var m2d_1 = Matrix23.create(),
+    m2d_2 = Matrix23.create(),
+    m2d_3 = Matrix23.create();
+
+var rect = Rectangle.create(0,0,50,50);
+
+
+Matrix23.translate(m2d_1, m2d_1, [50, 50]);
+Matrix23.rotate(m2d_1, m2d_1, Math.HALF_PI * 0.5);
+Matrix23.skewX(m2d_1, m2d_1, Math.HALF_PI * 0.5);
+
+Matrix23.translate(m2d_2, m2d_2, [250, 250]);
+Matrix23.rotate(m2d_2, m2d_2, -Math.HALF_PI * 0.5);
+Matrix23.skewX(m2d_2, m2d_2, -Math.HALF_PI * 0.5);
+
+
+var acc = 0.7;
+setInterval(function() {
+    ctx.save();
+    ctx.clearRect (0 ,0 ,640 ,480);
+
+    acc+=0.01;
+    if (acc > 1) {
+        acc = 0;
+    }
+
+    //var factor = Transitions.BounceInOut(acc);
+    var factor = Transitions.linear(acc);
+    console.log(Math.round(acc * 100) / 100, Math.round(factor * 100) / 100);
+
+    ctx.save();
+    Draw.applyMatrix23(ctx, m2d_1);
+    Draw.rectangle(ctx, rect, "red");
+
+    Draw.applyMatrix23(ctx, m2d_2);
+
+    Draw.rectangle(ctx, rect, "blue");
+
+
+    Matrix23.interpolate(m2d_3, m2d_1, m2d_2, factor);
+    Draw.applyMatrix23(ctx, m2d_3);
+    Draw.rectangle(ctx, rect, "purple");
+    ctx.restore();
+
+
+    var in_poly = Polygon.fromRectangle(rect);
+    console.log(JSON.stringify(in_poly));
+    Matrix23.translate(m2d_3, m2d_3, [10, 10])
+    var out_poly = Polygon.transform([], in_poly, m2d_3);
+    Draw.polygon(ctx, out_poly, "green")
+
+    ctx.restore();
+}, 50);
+
+
+</script>

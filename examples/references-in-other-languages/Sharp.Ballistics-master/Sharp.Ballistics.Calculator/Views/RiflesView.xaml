@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="Sharp.Ballistics.Calculator.Views.RiflesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:util="clr-namespace:Sharp.Ballistics.Calculator"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:calUtil="clr-namespace:Caliburn.Micro.Imported"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Sharp.Ballistics.Calculator.Views"
+             mc:Ignorable="d" 
+              MinWidth="600" x:Name="ParentControl">
+    <UserControl.Resources>
+        <calUtil:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <util:CaliberValueConverter x:Key="CaliberValueConverter" />
+        <util:LengthConverter x:Key="DistanceUnitConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <toolkit:BusyIndicator BusyContent="{Binding BusyText}" IsBusy="{Binding IsBusy}">
+            <StackPanel Orientation="Vertical">
+                <Button Content="Add" x:Name="AddRifle" Margin="0,10,0,0" Width="150" Height="25"/>
+                <ListView cal:Message.Attach="[Event MouseDoubleClick] = [Action EditRifle($this.SelectedItem)]"
+                          Margin="15,10,15,20" Height="350" ItemsSource="{Binding Rifles}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="100" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical" Width="550">
+                                    <WrapPanel>
+                                        <TextBlock Text="Name: "/>
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <TextBlock Text="Cartridge: "/>
+                                        <TextBlock Text="{Binding Cartridge.Name}" FontWeight="Bold"/>
+                                        <TextBlock Text="(" VerticalAlignment="Center" Margin="5,0,1,0"/>
+                                        <TextBlock Text="{Binding Cartridge.Caliber, Converter={StaticResource CaliberValueConverter}}" VerticalAlignment="Center" Margin="1,0,1,0"/>
+                                        <TextBlock Text="{Binding Path=DataContext.Units.Caliber, ElementName=ParentControl, Converter={StaticResource DistanceUnitConverter}}" 
+                       VerticalAlignment="Center" Margin="1,0,1,0"/>
+                                        <TextBlock Text="," VerticalAlignment="Center" Margin="1,0,1,0"/>
+                                        <TextBlock Text="{Binding Cartridge.WeightGrains}" VerticalAlignment="Center" Margin="1,0,1,0"/>
+                                        <TextBlock Text="grain" VerticalAlignment="Center" Margin="1,0,1,0"/>
+                                        <TextBlock Text="," VerticalAlignment="Center" Margin="1,0,1,0"/>
+                                        <TextBlock Text="{Binding Cartridge.DragFunction}" VerticalAlignment="Center" Margin="1,0,1,0"/>
+                                        <TextBlock Text="model)" VerticalAlignment="Center" Margin="1,0,1,0"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <TextBlock Text="Scope: "/>
+                                        <TextBlock Text="{Binding Scope.Name}" FontWeight="Bold"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="0"
+                                            HorizontalAlignment="Right" 
+                                            Margin="0,0,-95,0"
+                                            VerticalAlignment="Center" Orientation="Horizontal">
+                                    <Image ToolTip="This rifle is configured with non-listed cartridge"                                            
+                                           Margin="5,0,5,0" VerticalAlignment="Center" 
+                                           Source="/Sharp.Ballistics.Calculator;component/Images/warning-nonlisted-bullet.png" 
+                                           Visibility="{Binding IsUsingNonListedAmmo, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                           Width="65" Height="65" />
+                                    <Image ToolTip="This rifle is configured with non-listed scope"
+                                           Margin="5,0,5,0" VerticalAlignment="Center" 
+                                           Source="/Sharp.Ballistics.Calculator;component/Images/warning-nonlisted-scope.png" 
+                                           Visibility="{Binding IsUsingNonListedScope, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                           Width="65" Height="65" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,-430,0" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
+                                    <Button cal:Message.Attach="EditRifle($dataContext)" Margin="3" Padding="5" Width="30" Height="30">
+                                        <Image Source="/Sharp.Ballistics.Calculator;component/Images/edit-icon.png" />
+                                    </Button>
+                                    <Button cal:Message.Attach="RemoveRifle($dataContext)" Margin="3" Padding="5" Width="30" Height="30">
+                                        <Image Source="/Sharp.Ballistics.Calculator;component/Images/delete-icon.png" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+        </toolkit:BusyIndicator>
+    </Grid>
+</UserControl>

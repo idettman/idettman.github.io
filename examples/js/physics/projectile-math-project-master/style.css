@@ -1,0 +1,22 @@
+html { width: 100%; height:100%; padding: 0;}
+body {width: 100%; height: 100%; margin: 0;background: #222; font: 14px Arial, Helvetica, sans-serif;}
+/*#canvas_id { 
+	padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 800px;
+}*/
+#div_id {width:1000px;height:700px;background-color:#000;float: left;}
+#div_canvas {width:800px;height:100px;background-color:#225;float: left;}
+#div_right {width:199px;height:600px;float: left;background-color:#245}
+#div_ala {width:999px;height:100px;background-color:#220;float: left;}
+form {color:white;}
+dt {padding-top: 15px; font-weight:bold; color: #003399;}
+dd {padding-top: 5px;}
+ul {margin: 0; color:black;}
+h1 {padding-top: 10px}
+h2 {color: #003399;}
+p, h1, h2, dl {padding-left:10px; padding-right:10px;}
+p {margin:0;}

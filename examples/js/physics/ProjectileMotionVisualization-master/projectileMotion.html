@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="processing.js"></script>
+		<script type ="text/processing" data-processing-target="mycanvas">
+
+			size(400,400);
+						
+			var initVelo = 0;
+			var initAngle = 0;
+			var maxX = 0;
+			var maxY = 0;
+			var backgroundColor = color(3, 224, 187);
+
+			background(backgroundColor);
+
+			var Slider = function(config){
+			    this.x = config.x;
+			    this.y = config.y;
+			    this.width = config.width;
+			    this.height = config.height;
+			    this.message = config.message;
+			    this.curEnd = config.curEnd;
+			    this.minValue = config.minValue;
+			    this.maxValue = config.maxValue;
+			};
+
+			Slider.prototype.draw = function() {
+				pushMatrix();
+			    fill(0,0,0);
+			    translate(this.x,this.y);
+			    stroke(0,0,0);
+			    strokeWeight(2);
+			    fill(0, 0, 0);
+			    text(this.message,-80,7.5);
+			    fill(255, 255, 255);
+			    rect(0,0,this.width,this.height);
+			    strokeWeight(0);
+			    stroke(255,0,0);
+			    fill(255,0,0);
+			    rect(1,1,this.curEnd-this.x-1, this.height-1);
+			    popMatrix();
+			};
+
+			Slider.prototype.drawRect = function() {
+				pushMatrix();
+			    translate(this.x,this.y);
+			    stroke(0,0,0);
+			    strokeWeight(2);
+			    fill(255, 255, 255);
+			    rect(0,0,this.width,this.height);
+			    strokeWeight(0);
+			    stroke(255,0,0);
+			    fill(255,0,0);
+			    rect(1,1,this.curEnd-this.x-1, this.height-1);
+			    popMatrix();
+			};
+
+			Slider.prototype.isMouseInside = function(){
+				if (mouseX > this.x && mouseX < this.x + this.width && mouseY > this.y && mouseY < this.y + this.height){
+			        return true;
+			    }
+			    return false;
+			};
+
+			Slider.prototype.findCurValue = function(){
+			    return ((this.curEnd - this.x)/this.width)*(this.maxValue - this.minValue) + this.minValue;
+			};
+
+			var velocitySlider = new Slider({
+			    x : width-155,
+			    y : 10,
+			    width : 150,
+			    height : 10,
+			    message : "Initial Velocity",
+			    curEnd : width-80,
+			    minValue: 5,
+			    maxValue: 50
+			});
+
+			var angleSlider = new Slider({
+			   x : width-155,
+			   y : 35,
+			   width : 150,
+			   height : 10,
+			   message : "Initial Angle",
+			   curEnd : width-80,
+			   minValue: 0.0872664626,
+			   maxValue: 1.48352986 
+			});
+
+			velocitySlider.draw();
+			angleSlider.draw();
+
+			initVelo = velocitySlider.findCurValue();
+			initAngle = angleSlider.findCurValue();
+
+			var drawAxes = function (maxX, maxY, scaleF, offsetX, offsetY,interval){
+			    pushMatrix();
+			    translate(offsetX,height-offsetY);
+			    scale(scaleF);
+			    line(0,0,maxX,0);
+			    line(0,0,0,-maxY-offsetY);
+			    popMatrix();
+			};
+
+			var resetCanvas = function(){
+			    stroke(backgroundColor);
+			    fill(backgroundColor);
+			    rect(0,height,width,-350);
+			};
+
+			var updateXMax = function(){
+				stroke(backgroundColor);
+			    fill(backgroundColor);
+			    rect(5,5,150,15);
+			    fill(0,0,0);
+			    text("Max Distance is: " + maxX.toFixed(2),5,18);
+			};
+
+			var updateYMax = function(){
+				stroke(backgroundColor);
+			    fill(backgroundColor);
+			    rect(5,30,150,15);
+			    fill(0,0,0);
+			    text("Max Height is: " + maxY.toFixed(2),5,43);
+			};
+
+			var drawProjectileMotion = function(initVelo, initAngle, offsetX, offsetYBottom, offsetYTop){
+			    var numIntervals = 30;
+			    maxX = pow(initVelo,2)*sin(2*initAngle)/(9.81);
+			    maxY = pow(initVelo,2)*pow(sin(initAngle),2)/2/9.81;
+			    var scaleF = min(min((width-offsetX)/maxX,(height-offsetYBottom-offsetYTop)/maxY),5);
+			    pushMatrix();
+			    translate(offsetX,height-offsetYBottom);
+			    scale(scaleF);
+			    var interval = maxX/(numIntervals+1);
+			    var x  = 0;
+			    var y;
+			    for (var i = 0; i<= 31; i++){
+			        x = i*interval;
+			        y = -9.81*pow(x,2)/2/(pow(initVelo,2))/(pow(cos(initAngle),2)) + x*tan(initAngle);
+			        stroke(255, 0, 0);
+			        fill(0,0,0);
+			        point(x,-y);
+			    }
+			    popMatrix();
+			    updateXMax();
+			    updateYMax();
+			};
+
+			var curX, somethingPressed = false;
+			mouseDragged = function(){
+				if(velocitySlider.isMouseInside()){
+			    	if(mousePressed) { 		
+			            velocitySlider.curEnd = mouseX;
+			            velocitySlider.drawRect();
+			            initVelo = velocitySlider.findCurValue();
+			            resetCanvas();    
+			            drawProjectileMotion(initVelo,initAngle,10,15,55);
+			        }
+			    } else if (angleSlider.isMouseInside()){
+			        if(mousePressed){
+			            angleSlider.curEnd = mouseX;
+			            angleSlider.drawRect();
+			            initAngle = angleSlider.findCurValue();
+			            resetCanvas();    
+			            drawProjectileMotion(initVelo,initAngle,10,15,55);
+			        }
+			    } 
+			};
+			drawProjectileMotion(initVelo,initAngle,10,15,55);
+		</script>
+		<style type="text/css">
+
+			#mycanvas {
+				margin-left: 200;
+			}
+
+			.container {
+				width:100%;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<canvas id="mycanvas" width="400" height="400">
+			</canvas>
+		</div>
+	</body>
+</html>

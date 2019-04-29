@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" ></script>
+<title>js-2dmath: Some Vec2 functions in action</title>
+
+<script src="../dist/js-2dmath-browser.min.js" type="text/javascript" ></script>
+<!--
+<script src="../dist/js-2dmath-browser.min.js" type="text/javascript" ></script>
+-->
+
+</head>
+<body>
+<h1>js-2dmath: Some Vec2 functions in action</h1>
+<canvas id="canvas-axis" width="640" height="640" style="position: absolute; border: 2px solid blue;"></canvas>
+<canvas id="canvas" width="640" height="640" style="position: absolute; z-index: 10; border: 1px solid red;"></canvas>
+</body>
+</html>
+
+<script>
+
+/**
+* @source http://chrishecker.com/Rigid_Body_Dynamics
+* @source http://www.wildbunny.co.uk/blog/2011/04/06/physics-engines-for-dummies/
+* @source http://physics.gac.edu/~miller/jterm_2013/physics_engine_tutorial.html
+*/
+
+require("js-2dmath").globalize(window);
+
+window.requestAnimFrame = function (callback) {
+    window.setTimeout(callback, 1000);
+};
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+var canvas_axis = document.getElementById("canvas-axis");
+var ctx_axis = canvas_axis.getContext("2d");
+
+function World(maxdt, max_iterations, gravity) {
+    this.gravity = gravity || [0, -9.8];
+    this.maxdt = maxdt;
+    this.max_iterations = max_iterations || 10;
+}
+World.prototype.bodies = [];
+World.prototype.maxdt = 0;
+World.prototype.gravity = [0, -9.8];
+
+World.prototype.addBody = function(body) {
+    this.bodies.push(body);
+};
+
+World.prototype._update = function(dt) {
+    var self = this;
+    // update world position & gravity
+    var gravity = Vec2.scale([0, 0], this.gravity, dt);
+    this.forEachBody(function (b) {
+        //apply gravity only to movable objects
+        if (b.imass !== 0) {
+            b.update();
+            //Vec2.add(b.velocity, b.velocity, gravity);
+            b.velocity[0] = b.velocity[0] + gravity[0] * b.mass;
+            b.velocity[1] = b.velocity[1] + gravity[1] * b.mass;
+        }
+    });
+
+    // collisions
+    this.forEachBodyPair(function (a, b) {
+
+        var result = new Collision.SAT.Response();
+
+        var aEdges = [];
+        var aNormals = [];
+        Polygon.edges(aEdges, a.wbody);
+        Polygon.normals(aNormals, aEdges);
+
+        var bEdges = [];
+        var bNormals = [];
+        Polygon.edges(bEdges, b.wbody);
+        Polygon.normals(bNormals, bEdges);
+
+        Collision.SAT.getPolygonPolygon(result, a.wbody, aNormals, [0, 0], b.wbody, bNormals, [0, 0]);
+        console.log("SAT", JSON.stringify(result));
+
+        if (result.depth) {
+            //self.stop = true;
+
+            //Draw.polygon(ctx, result.simplex, "rgba(0,255,0,0.25)", true);
+            //console.log("GJK", JSON.stringify(result));
+            //var epa = Polygon.EPA(a.wbody, b.wbody, result.simplex);
+            //console.log("EPA", JSON.stringify(epa));
+
+            var ec = Collision.Manifold.EdgeClipping(a.wbody, b.wbody, result.mtv);
+            console.log("EC", JSON.stringify(ec));
+
+            if (ec) {
+                ctx.lineWidth = 3;
+                Draw.segment2(ctx,
+                    [ec.incidentEdge.v1[0], ec.incidentEdge.v1[1], ec.incidentEdge.v2[0], ec.incidentEdge.v2[1]], "green");
+                Draw.segment2(ctx,
+                    [ec.referenceEdge.v1[0], ec.referenceEdge.v1[1], ec.referenceEdge.v2[0], ec.referenceEdge.v2[1]], "yellow");
+                ctx.lineWidth = 1;
+
+                var aPos = Vec2.midPoint([0, 0], ec.incidentEdge.v1, ec.incidentEdge.v2);
+                var bPos = Vec2.midPoint([0, 0], ec.referenceEdge.v1, ec.referenceEdge.v2);
+
+                Draw.vec2(ctx, aPos, "orange");
+                Draw.vec2(ctx, bPos, "orange");
+                /*
+                // two dynamics use elastic
+                // aPos, aVelocity, aMass, afVelocity, bPos, bVelocity, bMass, bfVelocity
+                Collision.elastic(aPos, a.velocity, a.mass, bPos, b.velocity, b.mass);
+                */
+
+                Collision.Resolve.linear(a.velocity, a.restitution, a.imass, aPos, b.velocity, b.restitution, b.imass, bPos, result.mtv);
+            }
+        }
+    });
+    // - air friction
+    // - ground friction
+    // integrate
+    var hdt = dt * 0.5,
+        dt6 = dt * 0.166666667;
+    this.forEachBody(function (b) {
+        //apply gravity only to movable objects
+        if (b.imass !== 0) {
+            var stateX = NumericalIntegration.RK4(b.position[0], b.velocity[0], b.nimass, 1, 0, dt, hdt, dt6);
+            var stateY = NumericalIntegration.RK4(b.position[1], b.velocity[1], b.nimass, 1, 0, dt, hdt, dt6);
+
+            b.velocity[0] = stateX[1];
+            b.velocity[1] = stateY[1];
+
+            b.translate2(stateX[0] - b.position[0], stateY[0] - b.position[1]);
+            console.log(b.position);
+        }
+    });
+}
+World.prototype.update = function(dt) {
+    if (this.stop) return;
+
+    // fix dt
+    this._update(dt);
+}
+
+World.prototype.forEachBody = function(fn) {
+    var i = 0,
+        bs = this.bodies,
+        max = bs.length
+
+    for (i = 0; i < max; ++i) {
+        fn(bs[i]);
+    }
+}
+
+World.prototype.forEachBodyPair = function(fn) {
+    var i = 0,
+        bs = this.bodies,
+        max = bs.length
+
+    for (i = 0; i < max; ++i) {
+        for (j = i + 1; j < max; ++j) {
+            fn(bs[i], bs[j]);
+        }
+    }
+}
+
+var BodyUID = 0;
+function Body(body, mass, restitution) {
+    this.uid = ++BodyUID;
+    this.body = body;
+    this.type = "polygon";
+    //this.hash = 1;
+    this.restitution = restitution || 0;
+
+    this.matrix = Matrix23.create();
+    this.matrix[7] = true;
+    this.wbody = new Array(body.length);
+
+    this.mass = mass || 1;
+    if (mass === 0) {
+        this.imass = 0;
+        this.nimass = 0;
+        this.update(); // manual update
+    } else {
+        this.imass = 1 / this.mass;
+        this.nimass = -(1 / this.mass);
+    }
+    // arrays must be instanced again
+    this.velocity = [0, 0];
+    this.position = [0, 0];
+
+    //this.moi = Polygon.area(body) *
+}
+
+Body.prototype.translate2 = function (x, y) {
+    Matrix23.translate(this.matrix, this.matrix, [x, y]);
+    this.position[0] = +x;
+    this.position[1] = +y;
+}
+Body.prototype.update = function () {
+    if (this.matrix[7]) {
+        this.matrix[7] = false;
+
+        Polygon.transform(this.wbody, this.body, this.matrix);
+    }
+}
+Body.prototype.position = [0, 0];
+Body.prototype.velocity = [0, 0];
+Body.prototype.hash = 1;
+
+Body.prototype.avelocity = 0;
+Body.prototype.torque = 0;
+Body.prototype.orientation = 0;
+
+Body.prototype.restitution = 0;
+Body.prototype.mass = 0;
+Body.prototype.imass = 0;
+Body.prototype.nimass = 0;
+Body.prototype.matrix = [];
+Body.prototype.wbody = [];
+Body.prototype.moi = 0;
+
+
+var world = new World();
+
+var b1 = new Body (Polygon.fromCircle(Circle.create(0, 0, 50), 10, 0), 0, 1);
+world.addBody(b1);
+
+var b2 = new Body (Polygon.fromCircle(Circle.create(0, 0, 50), 10, Math.PI / 16), 1, 1);
+b2.translate2(50, 100);
+world.addBody(b2);
+
+var b3 = new Body (Polygon.fromCircle(Circle.create(0, 0, 25), 10, Math.PI / 16), 5, 1);
+b3.translate2(-40, 80);
+world.addBody(b3);
+
+var b4 = new Body (Polygon.fromCircle(Circle.create(0, 0, 10), 10, Math.PI / 16), 50, 1);
+b4.translate2(0, 150);
+world.addBody(b4);
+
+function update() {
+    // do not clear canvas we dont see debug information
+    if (world.stop) return ;
+
+    window.requestAnimFrame(update);
+
+    ctx.save();
+    canvas.width = canvas.width;
+    Draw.invertAxis(canvas, ctx); // y-up
+    ctx.translate(canvas.width * 0.5, canvas.height * 0.5); // center
+
+    world.update(0.05);
+
+    b1.update();
+    b2.update();
+
+    Draw.polygon(ctx, b1.wbody, "red");
+    Draw.polygon(ctx, b2.wbody, "blue");
+    Draw.polygon(ctx, b3.wbody, "blue");
+    Draw.polygon(ctx, b4.wbody, "blue");
+
+    ctx.restore();
+};
+window.requestAnimFrame(update);
+
+Draw.invertAxis(canvas_axis, ctx); // y-up
+ctx_axis.translate(canvas_axis.width * 0.5, canvas_axis.height * 0.5); // center
+Draw.cartesianAxis(ctx_axis, 320, 16); // coordinates
+
+</script>

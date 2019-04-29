@@ -1,0 +1,4 @@
+
+- Simulation: show sim and real time
+- Stats: check standard deviation
+- Forms: input validation

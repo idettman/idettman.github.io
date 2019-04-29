@@ -1,0 +1,68 @@
+{
+  "name": "space-sim",
+  "version": "0.0.0",
+  "description": "Tool for prototyping interplanetary trajectories",
+  "main": "server/bootloader.js",
+  "scripts": {
+    "start": "node server/bootloader",
+    "prod": "set NODE_ENV=production&& node server/bootloader",
+    "test": "exit 0",
+    "lint": "eslint server client",
+    "analyze-size": "node server/bootloader --file webpack/analyzeBundleSize"
+  },
+  "pre-commit": "test",
+  "keywords": [
+    "space"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashtonwar/space-sim.git"
+  },
+  "author": "Ashton <me@ashtonwar.com> (http://www.ashtonwar.com/)",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.15.1",
+    "chalk": "1.1.3",
+    "forever-monitor": "git://github.com/ashtonwar/forever-monitor.git",
+    "fs-extra": "0.30.0",
+    "http-proxy": "1.13.3",
+    "keycode": "2.1.1",
+    "lodash": "4.12.0",
+    "minimist": "1.2.0",
+    "moment": "2.13.0",
+    "morgan": "1.7.0",
+    "plotly.js": "1.11.0",
+    "react": "15.0.2",
+    "react-dom": "15.0.2",
+    "react-redux": "4.4.5",
+    "react-router": "2.4.1",
+    "react-three-renderer": "2.0.1",
+    "redux": "3.5.2",
+    "redux-action": "1.0.0",
+    "redux-actions": "0.9.1",
+    "redux-loop": "2.1.1",
+    "request": "2.72.0",
+    "serve-favicon": "2.3.0",
+    "three": "0.76.1",
+    "xr": "0.2.0"
+  },
+  "devDependencies": {
+    "babel-core": "6.9.0",
+    "babel-eslint": "6.0.4",
+    "babel-loader": "6.2.4",
+    "babel-plugin-transform-object-rest-spread": "6.8.0",
+    "babel-plugin-transform-react-jsx": "6.8.0",
+    "babel-preset-es2015": "6.9.0",
+    "babel-preset-stage-0": "6.5.0",
+    "eslint": "2.10.2",
+    "eslint-config-airbnb": "9.0.1",
+    "eslint-plugin-import": "1.8.0",
+    "eslint-plugin-jsx-a11y": "1.2.2",
+    "eslint-plugin-react": "5.1.1",
+    "pre-commit": "1.1.3",
+    "raw-loader": "0.5.1",
+    "webpack": "1.13.1",
+    "webpack-bundle-size-analyzer": "2.0.1",
+    "webpack-dev-server": "1.14.1"
+  }
+}
