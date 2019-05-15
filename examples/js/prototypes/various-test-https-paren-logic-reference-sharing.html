@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>http secure logic</title>
+</head>
+<body>
+<code id="container"></code>
+<script>
+  const container = document.getElementById('container')
+  container.textContent = window.location.protocol;
+  
+  
+  function testReturn(pubcid) {
+    return (pubcid) || 'utils.generateUUID()';
+  }
+  function testReturn2(pubcid) {
+    return pubcid || 'utils.generateUUID()';
+  }
+  [null,undefined, -1,0,1,{},'','1',true, false, [], [0,1], function() {}, NaN].forEach(item => {
+    console.log('testReturn: %s', testReturn(item));
+    console.log('%ctestReturn2: %s', 'color: green', testReturn(item));
+  });
+  
+  
+  function testRefs() {
+    let foo = {
+      bar:'foo'
+    };
+    console.log('INTERNAL foo: %O', foo);
+    
+    // after refence is updated, the external reference will no longer affect the new internal
+    setTimeout(function() {
+      foo = {
+        baz:'duooo'
+      };
+      console.log('INTERNAL foo 100ms: setTimeout complete: %O', foo);
+    }, 100);
+    
+    setTimeout(function() {
+      console.log('INTERNAL foo 500ms: setTimeout complete: %O', foo);
+    }, 500);
+    
+    return foo; 
+  }
+  
+  let one = testRefs();
+  console.log('EXTERNAL foo: %O', one);
+  setTimeout(function() {
+    console.log('EXTERNAL foo 200ms: setTimeout complete: %O', one);
+    one['batdance'] = 'doododod';
+  }, 200);
+  
+  setTimeout(function() {
+    console.log('EXTERNAL foo 700ms: setTimeout complete: %O', one);
+  }, 700);
+  
+  
+</script>
+</body>
+</html>

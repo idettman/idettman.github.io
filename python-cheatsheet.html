@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+
+
+<ul>
+  <li>https://www.mkyong.com/python/python-how-to-loop-a-dictionary/</li>
+  <li>https://www.mkyong.com/python/python-how-to-loop-a-dictionary/</li>
+</ul>
+
+<dl>
+  <dt>trinary operator, like in JS (condition) ? branchA : branchB</dt>
+  <dd>a if condition else b</dd>
+  <dt>To loop every key and value from a dictionary – for k, v in dict.items():</dt>
+</dl>
+
+First condition is evaluated, then exactly one of either a or b is evaluated and returned based on the Boolean value of condition. 
+If condition evaluates to True, then a is evaluated and returned but b is ignored, or else when b is evaluated and returned but a is ignored.
+
+This allows short-circuiting because when condition is true only a is evaluated and b is not evaluated at all, 
+but when condition is false only b is evaluated and a is not evaluated at all.
+
+<div>For example:</div>
+<code>
+>>> 'true' if True else 'false'
+'true'
+>>> 'true' if False else 'false'
+'false'
+</code>
+Note that conditionals are an expression, not a statement. This means you can't use assignment statements or pass or other statements within a conditional expression:
+
+<code>
+>>> pass if False else x = 3
+File "<stdin>", line 1
+  pass if False else x = 3
+  ^
+  SyntaxError: invalid syntax
+  In such a case, you have to use a normal if statement instead of a conditional expression.
+
+  Keep in mind that it's frowned upon by some Pythonistas for several reasons:
+
+  The order of the arguments is different from those of the classic condition ? a : b ternary operator from many other languages (such as C, C++, Go, Perl, Ruby, Java, Javascript, etc.), which may lead to bugs when people unfamiliar with Python's "surprising" behaviour use it (they may reverse the argument order).
+  Some find it "unwieldy", since it goes contrary to the normal flow of thought (thinking of the condition first and then the effects).
+  Stylistic reasons.
+  If you're having trouble remembering the order, then remember that when read aloud, you (almost) say what you mean. For example, x = 4 if b > 8 else 9 is read aloud as x will be 4 if b is greater than 8 otherwise 9.
+
+  Official documentation:
+
+  Conditional expressions
+  Is there an equivalent of C’s ”?:” ternary operator?
+  shareimprove this answer
+  edited Jan 29 at 5:52
+  community wiki
+  16 revs, 12 users 30%
+  Vinko Vrsalovic
+  207
+  The order may seems strange for coders however f(x) = |x| = x if x > 0 else -x sounds very natural to mathematicians. You may also understand it as do A in most case, except when C then you should do B instead... – yota Jan 25 '16 at 15:07
+  85
+  Be careful with order of operations when using this. For example, the line z = 3 + x if x < y else y. If x=2 and y=1, you might expect that to yield 4, but it would actually yield 1. z = 3 + (x if x > y else y) is the correct usage. – Kal Zekdor Mar 6 '16 at 9:23
+  6
+  The point was if you want to perform additional evaluations after the conditional is evaluated, like adding a value to the result, you'll either need to add the additional expression to both sides (z = 3 + x if x < y else 3 + y), or group the conditional (z = 3 + (x if x < y else y) or z = (x if x < y else y) + 3) – Kal Zekdor Apr 15 '16 at 0:36
+  7
+  @Pred try print("OK" if status else "NOT OK") – AdrienW Aug 2 '16 at 13:21
+  47
+  I love the vague irony of this syntactic ordering being described as natural by someone called @yota. – nickf Dec 20 '16 at 21:25
+  show 21 more comments
+
+
+  675
+
+  You can index into a tuple:
+
+  (falseValue, trueValue)[test]
+  test needs to return True or False.
+  It might be safer to always implement it as:
+
+  (falseValue, trueValue)[test == True]
+  or you can use the built-in bool() to assure a Boolean value:
+
+  (falseValue, trueValue)[bool(<expression>)]
+    shareimprove this answer
+    edited Oct 17 '15 at 7:35
+    community wiki
+    Landon Kuhn
+    517
+    Note that this one always evaluates everything, whereas the if/else construct only evaluates the winning expression. – SilverbackNet Feb 4 '11 at 2:25
+    97
+    (lambda: print("a"), lambda: print("b"))[test==true]() – Dustin Getz Mar 8 '12 at 19:31
+    14
+    It should be noted that what's within the []s can be an arbitrary expression. Also, for safety you can explicitly test for truthiness by writing [bool(<expression>)]. The bool() function has been around since v2.2.1. – martineau May 31 '12 at 18:20
+      11
+      This is great for code-golf, not so much for actual code. Although I have gotten so used to it that I do use it sometimes for conciseness when doing something obvious like picking between two string constants. – Claudiu Dec 5 '14 at 17:52
+      8
+      I've done a similar trick -- only once or twice, but done it -- by indexing into a dictionary with True and False as the keys: {True:trueValue, False:falseValue}[test] I don't know whether this is any less efficient, but it does at least avoid the whole "elegant" vs. "ugly" debate. There's no ambiguity that you're dealing with a boolean rather than an int. – JDM Mar 1 '16 at 18:43
+</body>
+</html>
