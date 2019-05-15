@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>working-sandbox</title>
+</head>
+<body>
+
+<script>
+  // What does reduce output when on an array with zero length ?
+  const reduceOverEmpty = ['', '', '', '', '', ''].filter(submodule => !!submodule).reduce((carry, submodule, i) => {
+    carry[i +  '-id'] = i * 1000000 / 0.82;
+    return carry;
+  }, {});
+  console.log('result of reduce on array.length=0 aggegating an object: %o', reduceOverEmpty)
+</script>
+
+<script>
+  /**
+   * @type {number}
+   * @des order of operations test, using no parenthesis around a typeof test
+   * @example
+   * if (typeof var === boolean) ? '1' : null | typeof var === boolean ? 1 : 0) return;
+   */
+  const DEFAULT = (new Array(80));
+  const userSync = {config: 2222}
+  let last = Date.now();
+  const userSyncEmpty = {};
+  [ 
+    ['no parens', 
+      typeof userSync.config === 'undefined' 
+        ? userSync.config 
+        : DEFAULT],
+    ['parens', 
+      (typeof userSync.config !== 'undefined') 
+        ? userSync.config 
+        : DEFAULT],
+    
+    ['empty userSync, no parens', 
+      typeof userSyncEmpty.config !== 'undefined' 
+        ? userSyncEmpty.config 
+        : DEFAULT],
+    ['empty userSync, parens', 
+      (typeof userSyncEmpty.config !== 'undefined') 
+        ? userSyncEmpty.config 
+        : DEFAULT]
+    
+  ].forEach(item => {
+    last += 100 * Math.random() / (Math.random() * 1000000000);
+    console.log('%s ::: test :: %s\n%cresult = %s', last, item[0], 'color:green', item[1]);
+  });
+</script>
+
+<script>
+  console.log(Array.from('foo'));
+  // expected output: Array ["f", "o", "o"]
+
+  console.log(Array.from([1, 2, 3], x => x + x));
+  // expected output: Array [2, 4, 6]
+
+  const dandy = `I'm a yankey doodle dandy`;
+  const words = dandy.split(' ');
+  const wordSplit = words.reduce((carry, i)=>{
+    carry.push(Array.from(i));
+    return carry;
+  }, []);
+  console.log(`${Array.from(words).map(i=>i+'E>')}`);
+  console.log(`aHHzzHHH    ${Array.from(words).map(i=>i+'E>'.repeat(Math.round(Math.random() * 100)))}`);
+  console.log(`${'ahHhh'.repeat(Math.round(Math.random() * 50))}    ${Array.from(words).map(i=>i+'E>'.repeat(Math.round(Math.random() * 25)))}`);
+  console.log(`${'ahhhh'.repeat(Math.round(Math.random() * 20))}    ${Array.from(words).map(i=>i+'___'.repeat(Math.round(Math.random() * 50)))}`);
+  console.log(`a${'ahhhh'.repeat(Math.round(Math.random() * 50))}    ${Array.from(words).map(i=>i+'<__'.repeat(Math.round(Math.random() * 100)))}`);
+  console.log(`aHHHHHHH    ${Array.from(words).map(i=>i+'.-.-.-.>'.repeat(Math.round(Math.random() * 20)))}`);
+  console.log(`${Array.from(words).map(i=>i+'_')}`);
+  
+  console.log(`${wordSplit}`);
+</script>
+</body>
+</html>
