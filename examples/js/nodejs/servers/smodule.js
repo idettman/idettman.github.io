@@ -17,13 +17,11 @@ const s = require('http').createServer((q, s) => {
 
 const html = s => {
   s.setHeader('content-type', 'text/html')
-  s.end(`<!doctype html>
-<html>
+  s.end(`<!doctype html><html>
 <script type=module>
-import app from './app.js'
-app()
-</script>
-`)
+import app from './app.js';
+app();
+</script>`)
 }
 
 const js = s => {
