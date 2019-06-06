@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  (function() {
+    (function() {
+      const obj = {
+        'a':{
+          'b': {
+            'rtc':'dkdkdkdkdk'
+          }
+        }
+      }
+
+      function index (obj, i) {
+        return obj[i]
+      }
+      console.log('output:', 'a.b.rtc'.split('.').reduce(index, obj));
+      //'a.b.etc'.split('.').reduce(index, obj)
+    })();
+
+
+    (function() {
+      const obj = {
+        'a':{
+          'b': {
+            'rtc':'dkdkdkdkd22222222 2 2 2 2 2k'
+          }
+        }
+      }
+
+      function index (obj, i) {
+        return obj[i]
+      }
+      function deepIndex(obj, path){
+        return path.split('.').reduce(index, obj)
+      }
+      console.log('2 output:', deepIndex(obj, 'a.b.rtc'));
+      console.log('2 output:', deepIndex(obj, 'a.b.rtc2'));
+      //'a.b.etc'.split('.').reduce(index, obj)
+    })();
+
+
+    (function() {
+      const obj = {
+        'a':{
+          'b': {
+            'rtc':'dkdkdkdkd3'
+          },
+          'c': {
+            'd':{
+              'e': {
+                value: '191919191919191' 
+              }
+            }
+          }
+        }
+      }
+
+      function index (obj, i) {
+        return obj[i]
+      }
+      function deepIndex(obj, path){
+        return path.reduce(index, obj)
+      }
+      console.log('3 output:', deepIndex(obj, 'a.b.rtc'.split('.')));
+      //'a.b.etc'.split('.').reduce(index, obj)
+    })();
+
+
+  })()
+  
+</script>
+</body>
+</html>
