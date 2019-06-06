@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  
+  function find(list, callback) {
+    for (let i = 0, len = list.length; i < len; i++) {
+      if (callback(list[i])) {
+        return list[i];
+      } 
+    } 
+  }
+
+  let submoduleConfigs = [{
+    name: 'one'
+  }, {
+    name: 'two'
+  },{
+    name: 'three'
+  },{
+    name: 'four'
+  }];
+  
+  let submodules = [{
+    submodule: {name: 'one'},
+    config: {name: 'one'}
+  }];
+  
+  let submoduleRegistry = [{
+    name: 'four'
+  }, {
+    name: 'two'
+  }, {
+    name: 'two'
+  }];
+
+  function matchingObjProps(itemB, prop) {
+    return function(itemA) { return itemA[prop] === itemB[prop]; }
+  }
+  
+  // find(submodules, matchingObjProps(submoduleReg, 'name'))
+  // find(submoduleConfigs, matchingObjProps(submodule, 'name'))
+  
+  /*submodules = submodules.concat(submoduleRegistry
+    .filter(submoduleReg => !find(submodules, submodule => submodule.name === submoduleReg.name))
+    .map(submodule => ({
+      submodule: submodule,
+      config: find(submoduleConfigs, config => config.name === submodule.name)
+    }))
+    .filter(submodule => submodule.config));*/
+  
+  submodules = submodules.concat(submoduleRegistry
+  .filter(submoduleReg => !find(submodules, matchingObjProps(submoduleReg, 'name')))
+  .map(submodule => ({
+    submodule: submodule,
+    config: find(submoduleConfigs, matchingObjProps(submodule, 'name'))
+  }))
+  .filter(submodule => submodule.config));
+  
+  console.dir(submodules);
+  
+</script>
+</body>
+</html>
