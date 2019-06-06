@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  (function() {
+    (function() {
+      const obj = {
+        'a':{
+          'b': {
+            'rtc':'dkdkdkdkdk'
+          }
+        }
+      }
+
+      function index (obj, i) {
+        return obj[i]
+      }
+      console.log('output:', 'a.b.rtc'.split('.').reduce(index, obj));
+      //'a.b.etc'.split('.').reduce(index, obj)
+    })();
+
+
+    (function() {
+      const obj = {
+        'a':{
+          'b': {
+            'rtc':'dkdkdkdkd22222222 2 2 2 2 2k'
+          }
+        }
+      }
+
+      function index (obj, i) {
+        return obj[i]
+      }
+      function deepIndex(obj, path){
+        return path.split('.').reduce(index, obj)
+      }
+      console.log('2 output:', deepIndex(obj, 'a.b.rtc'));
+      console.log('2 output:', deepIndex(obj, 'a.b.rtc2'));
+      //'a.b.etc'.split('.').reduce(index, obj)
+    })();
+
+
+    (function() {
+      const obj = {
+        'a':{
+          'b': {
+            'rtc':'dkdkdkdkd3'
+          },
+          'c': {
+            'd':{
+              'e': {
+                value: '191919191919191' 
+              }
+            }
+          }
+        }
+      }
+
+      // OPTIMIZED VERSION 
+      // deep obj prop access helper
+      function deepIndex(obj, path){
+        return path.split('.').reduce(function index (o, i) {
+            return (o === undefined || !o.hasOwnProperty(i)) ? undefined : o[i]; // obj[i];
+          }, obj);
+      }
+      
+      console.log('3 output:', deepIndex(obj, 'a.b.rtc'));
+      console.log('4 output:', deepIndex(obj, 'a.c.d.e'));
+      console.log('5 output:', deepIndex(obj, 'a.c.d.e.d.e.d.e'));
+    })();
+
+    (function() {
+      const obj = {
+        'a':{
+          'b': {
+            'rtc':'dkdkdkdkd3'
+          },
+          'c': {
+            'd':{
+              'e': {
+                value: '191919191919191'
+              }
+            }
+          }
+        }
+      }
+
+      // OPTIMIZED VERSION # 2 
+      // deep obj prop access helper
+      function deepIndex(obj, path){
+        
+        // 3rd
+        /*return path.split('.').reduce((o, i) =>  {
+          return (o === undefined || !o.hasOwnProperty(i)) ? undefined : o[i];
+        }, obj);*/
+        
+        // 2nd
+       /* return path.split('.').reduce((o, i) => ((!o || !o.hasOwnProperty(i)) ? undefined : o[i]), obj);*/
+        
+        // BEST!
+        return path.split('.').reduce((o, i) => (o && o[i]), obj);
+      }
+      
+      console.log('1.1 output:', deepIndex(obj, 'a'));
+      console.log('2.1 output:', deepIndex(obj, 'a.1'));
+      console.log('3.1 output:', deepIndex(obj, 'a.b.rtc'));
+      console.log('4.1  output:', deepIndex(obj, 'a.c.d.e'));
+      console.log('5.1 output:', deepIndex(obj, 'a.c.d.e.d.e.d.e'));
+    })();
+
+
+  })()
+  
+</script>
+</body>
+</html>
