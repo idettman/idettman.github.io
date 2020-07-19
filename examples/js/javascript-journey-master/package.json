@@ -82,7 +82,7 @@
     "immutable": "3.7.5",
     "lazy.js": "0.4.2",
     "lispyscript": "^1.0.1",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "q": "1.4.1",
     "ramda": "0.18.0",
     "redux": "3.0.4",
