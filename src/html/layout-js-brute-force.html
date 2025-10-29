@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+       <meta charset="utf-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <title>JS Brute Force Layout</title>
+       <style>
+            body {
+                margin: 0;
+            }
+            h1 {
+                margin: 1rem 0;
+            }    
+       </style>
+   </head>
+   <body>
+        <div id="mainContainer">
+            <header>
+                <h1>Featured Work</h1>
+            </header>
+            <main>
+                <h2>Gists</h2>
+                <ul>
+                    <li>1</li>
+                    <li>2</li>
+                    <li>3</li>
+                    <li>4</li>
+                </ul>
+
+                <h2>Commits</h2>
+                <ul>
+                    <li>1</li>
+                    <li>2</li>
+                    <li>3</li>
+                    <li>4</li>
+                </ul>
+
+                <div id="dynamicList">
+                    <h2>Markdown Notes</h2>
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                        <li>5</li>
+                        <li>6</li>
+                    </ul>
+                </div>
+            </main>
+        </div>   
+   </body>
+   <script>
+
+    // alias for frequent use
+    const getElement = (id) => document.getElementById(id);
+
+    const mainContainer = getElement('mainContainer');
+    mainContainer.style.backgroundColor = "#FF0000";
+
+    const dynamicList = getElement('dynamicList');
+    dynamicList.style.position = 'absolute';
+    dynamicList.style.top = '4rem';
+    dynamicList.style.left = '8rem';
+
+   </script>
+</html>
