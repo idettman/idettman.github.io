@@ -1,2 +1,0 @@
-# trajectory-calculator
-Trajectory calculator is a model that—as the name implies—calculates a discus' trajectory based on a number of adjustable variables. For the latest live version see discus.brendanspijkerman.nl

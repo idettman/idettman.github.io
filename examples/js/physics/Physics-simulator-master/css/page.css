@@ -1,8 +1,0 @@
-.fill-height {
-	min-height: 100vh;
-}
-
-.table-container {
-	overflow-y: scroll;
-	height: 300px;
-}

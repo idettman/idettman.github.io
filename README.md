@@ -1,1 +1,0 @@
-# idettman.github.io

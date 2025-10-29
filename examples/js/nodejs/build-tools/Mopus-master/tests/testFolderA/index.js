@@ -1,1 +1,0 @@
-export default "Test A (index.js file) successful !"

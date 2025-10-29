@@ -1,9 +1,0 @@
-{
-    "name": "monteCarlo",
-    "sources": {
-        "dir": "src"
-    },
-    "package-specs": [
-        "es6-global"
-    ]
-}
