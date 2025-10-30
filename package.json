@@ -1,0 +1,32 @@
+{
+  "name": "idettman.github.io",
+  "version": "1.0.0",
+  "description": "Isaac A Dettman github profile",
+  "keywords": [
+    "JavaScript",
+    "ECMAScript",
+    "Three.js",
+    "WebGL"
+  ],
+  "homepage": "https://github.com/idettman/idettman.github.io#readme",
+  "bugs": {
+    "url": "https://github.com/idettman/idettman.github.io/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idettman/idettman.github.io.git"
+  },
+  "license": "ISC",
+  "author": "Isaac A. Dettman",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "vite": "^7.1.12"
+  }
+}
